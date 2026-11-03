@@ -35,6 +35,7 @@ export type QuizState = {
   deadlineMs: number | null;
   pausedRemainingMs: number | null;
   question: Question | null;
+  clincherGroups: number[] | null;
   index: number;
   totalQuestions: number;
 };

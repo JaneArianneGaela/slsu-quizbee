@@ -1,3 +1,4 @@
+import { getStandings, firstTie } from "@/lib/standings";
 import { NextResponse } from "next/server";
 import { randomInt } from "node:crypto";
 import { z } from "zod";
@@ -5,7 +6,7 @@ import { isQm } from "@/lib/session";
 import { supabaseAdmin } from "@/lib/supabase/server";
 
 const Body = z.object({
-  action: z.enum(["start", "reveal", "pause", "resume", "add_time", "scoreboard", "finish", "reset_quiz"]),
+  action: z.enum(["start", "reveal", "pause", "resume", "add_time", "scoreboard", "finish", "reset_quiz", "start_clincher", "end_clincher"]),
   seconds: z.number().int().min(1).max(300).optional(),
 });
 
@@ -51,7 +52,7 @@ export async function POST(req: Request) {
     return Array.isArray(data?.order_ids) ? (data!.order_ids as string[]) : [];
   }
 
-  async function startAt(order: string[], index: number) {
+  async function startAt(order: string[], index: number, extra: Record<string, unknown> = {}) {
     const id = order[index];
     const { data: q } = await supabaseAdmin.from("questions").select("id, time_limit_s").eq("id", id).single();
     if (!q) return fail("Question not found. Re-run npm run seed.", 500);
@@ -64,6 +65,7 @@ export async function POST(req: Request) {
       deadline: iso(now + q.time_limit_s * 1000),
       paused_remaining_ms: null,
       revealed: false,
+      ...extra,
     });
   }
 
@@ -137,6 +139,31 @@ export async function POST(req: Request) {
       return move({ phase: "FINAL" });
     }
 
+    case "start_clincher": {
+      const fromScoreboard = st.phase === "ROUND_SCOREBOARD" || st.phase === "FINAL";
+      const fromClincher = st.phase === "REVEALED" && st.current_round === "CL";
+      if (!fromScoreboard && !fromClincher) return fail("Start the clincher from the final scoreboard.");
+      const order = await getOrder();
+      if (fromScoreboard && st.current_index + 1 < order.length) return fail("Finish the regular rounds first.");
+
+      const tied = firstTie(await getStandings());
+      if (!tied.length) return fail("No tie to break.");
+
+      const { data: cl } = await supabaseAdmin.from("questions").select("id").eq("round", "CL").order("order_no");
+      const next = (cl ?? []).map((q) => q.id).find((id) => !order.includes(id));
+      if (!next) return fail("No clincher questions left.");
+
+      const newOrder = [...order, next];
+      const { error } = await supabaseAdmin.from("quiz_order").upsert({ id: 1, order_ids: newOrder });
+      if (error) return fail("Could not save the clincher order.", 500);
+      return startAt(newOrder, newOrder.length - 1, { clincher_groups: tied });
+    }
+
+    case "end_clincher": {
+      if (st.phase !== "REVEALED" || st.current_round !== "CL") return fail("Not in a clincher.");
+      return move({ phase: "FINAL" });
+    }
+
     case "reset_quiz": {
       if (["REGISTRATION", "GROUPING", "ROLES"].includes(st.phase)) return fail("The quiz hasn't started yet.");
       await supabaseAdmin.from("submissions").delete().not("id", "is", null);
@@ -153,6 +180,7 @@ export async function POST(req: Request) {
           paused_remaining_ms: null,
           revealed: false,
           updated_at: iso(now),
+          clincher_groups: null,
         })
         .eq("id", 1);
       if (error) return fail("Reset failed.", 500);

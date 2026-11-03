@@ -9,7 +9,7 @@ export async function GET() {
   const [{ data: st }, { data: groups }, { data: people }, { data: ord }] = await Promise.all([
     supabaseAdmin
       .from("session_state")
-      .select("phase, registration_open, spin_at, current_index, current_question_id, deadline, paused_remaining_ms")
+      .select("phase, registration_open, spin_at, current_index, current_question_id, deadline, paused_remaining_ms, clincher_groups")
       .eq("id", 1)
       .single(),
     supabaseAdmin.from("groups").select("id, label, color").order("id"),
@@ -71,7 +71,7 @@ export async function GET() {
   return NextResponse.json({
     phase,
     effectivePhase,
-    registrationOpen: st ? true : true,
+    registrationOpen: st?.registration_open ?? true,
     spinAt: st?.spin_at ?? null,
     registered: list.length,
     isQm: qm,
@@ -86,5 +86,6 @@ export async function GET() {
     question,
     index: st?.current_index ?? -1,
     totalQuestions: order.length,
+    clincherGroups: Array.isArray(st?.clincher_groups) ? (st!.clincher_groups as number[]) : null,
   });
 }

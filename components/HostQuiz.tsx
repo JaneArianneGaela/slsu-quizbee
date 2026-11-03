@@ -2,9 +2,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { useQuizState } from "@/lib/useQuizState";
 import QuestionScreen from "@/components/QuestionScreen";
+import { useResults } from "@/lib/useResults";
+import RevealPanel from "@/components/RevealPanel";
+import { Scoreboard, Podium } from "@/components/Scoreboard";
 
 export default function HostQuiz() {
   const { s, now, load } = useQuizState();
+  const { r } = useResults(s);
+  const tied = r?.tied ?? [];
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -13,13 +18,13 @@ export default function HostQuiz() {
       setError("");
       setBusy(true);
       try {
-        const r = await fetch("/api/host/control", {
+        const res = await fetch("/api/host/control", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action, seconds }),
         });
-        const d = await r.json().catch(() => ({}));
-        if (!r.ok) setError(d.error ?? "Action failed.");
+        const d = await res.json().catch(() => ({}));
+        if (!res.ok) setError(d.error ?? "Action failed.");
       } catch {
         setError("Network error.");
       } finally {
@@ -33,7 +38,8 @@ export default function HostQuiz() {
   const ph = s?.effectivePhase ?? "";
   const q = s?.question ?? null;
   const live = ph === "QUESTION_LIVE" || ph === "LOCKED";
-  const lastOfRound = !!q && q.number === q.totalInRound;
+  const inClincher = q?.round === "CL";
+  const lastOfRound = !!q && !inClincher && q.number === q.totalInRound;
   const lastOverall = !!s && s.index + 1 >= s.totalQuestions;
   const paused = s?.pausedRemainingMs != null;
 
@@ -45,14 +51,20 @@ export default function HostQuiz() {
   let primary: { label: string; run: () => void } | null = null;
   if (ph === "LOBBY") primary = { label: "Start Question 1", run: () => act("start") };
   else if (live) primary = { label: "Reveal Answer", run: reveal };
+  else if (ph === "REVEALED" && inClincher)
+    primary = tied.length
+      ? { label: "Next Clincher Question", run: () => act("start_clincher") }
+      : { label: "End Clincher → Final Podium", run: () => act("end_clincher") };
   else if (ph === "REVEALED")
     primary = lastOfRound
       ? { label: "Show Round Scoreboard", run: () => act("scoreboard") }
       : { label: "Start Next Question", run: () => act("start") };
   else if (ph === "ROUND_SCOREBOARD")
-    primary = lastOverall
-      ? { label: "Finish", run: () => act("finish") }
-      : { label: "Start Next Round", run: () => act("start") };
+    primary = !lastOverall
+      ? { label: "Start Next Round", run: () => act("start") }
+      : tied.length
+      ? { label: "Start Clincher", run: () => act("start_clincher") }
+      : { label: "Finish", run: () => act("finish") };
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -126,10 +138,32 @@ export default function HostQuiz() {
         </div>
       )}
 
-      {ph === "ROUND_SCOREBOARD" && (
-        <p className="text-slate-400">Round scoreboard contents arrive in Stage 4B.</p>
+      {q && ph === "REVEALED" && <RevealPanel r={r} questionId={q.id} myGroupId={null} showOverlay={false} />}
+
+      {ph === "ROUND_SCOREBOARD" && r?.standings && (
+        <>
+          <Scoreboard rows={r.standings} title="Round scoreboard" />
+          {lastOverall && tied.length > 0 && (
+            <div className="flex items-center gap-3">
+              <p className="text-amber-400">Tie for a prize position: Group {tied.join(", ")}.</p>
+              <button disabled={busy} onClick={() => act("finish")} className="text-sm text-slate-400 underline">
+                Skip clincher and finish
+              </button>
+            </div>
+          )}
+        </>
       )}
-      {ph === "FINAL" && <p className="text-xl font-bold text-emerald-400">Quiz finished. Final podium arrives in Stage 4B.</p>}
+      {ph === "FINAL" && r?.standings && (
+        <>
+          <Podium rows={r.standings} />
+          <Scoreboard rows={r.standings} title="Final standings" />
+          {tied.length > 0 && (
+            <button disabled={busy} onClick={() => act("start_clincher")} className="rounded-lg bg-amber-400 px-5 py-2 font-bold text-slate-950">
+              Still tied (Group {tied.join(", ")}): Start Clincher
+            </button>
+          )}
+        </>
+      )}
 
       <button
         onClick={() => {

@@ -2,6 +2,10 @@
 import { useEffect, useRef, useState } from "react";
 import Wheel from "@/components/Wheel";
 import QuestionScreen from "@/components/QuestionScreen";
+import AnswerBox from "@/components/AnswerBox";
+import RevealPanel from "@/components/RevealPanel";
+import { Scoreboard, Podium } from "@/components/Scoreboard";
+import { useResults } from "@/lib/useResults";
 import { useQuizState } from "@/lib/useQuizState";
 
 function Shell({ children }: { children: React.ReactNode }) {
@@ -10,6 +14,7 @@ function Shell({ children }: { children: React.ReactNode }) {
 
 export default function PlayPage() {
   const { s, unauth, now, load } = useQuizState();
+  const { r, reload } = useResults(s);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [intro, setIntro] = useState(false);
@@ -39,13 +44,13 @@ export default function PlayPage() {
     setError("");
     setBusy(true);
     try {
-      const r = await fetch("/api/role", {
+      const res = await fetch("/api/role", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ role }),
       });
-      const d = await r.json().catch(() => ({}));
-      if (!r.ok) setError(d.error ?? "Could not save your role.");
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) setError(d.error ?? "Could not save your role.");
     } catch {
       setError("Network error. Try again.");
     } finally {
@@ -63,9 +68,25 @@ export default function PlayPage() {
 
   // ---- live question / reveal ----
   if (["QUESTION_LIVE", "REVEALED"].includes(s.phase) && s.question) {
+    const inClincher = s.question.round === "CL";
+    const inPlay = !inClincher || (s.clincherGroups ?? []).includes(me.groupId ?? -1);
+    const canAnswer = s.phase === "QUESTION_LIVE" && me.role === "ANSWERER" && inPlay;
+    const mine = r?.questionId === s.question.id ? r.mine : null;
     return (
-      <main className="min-h-screen p-6">
+      <main className="min-h-screen space-y-6 p-6">
         <QuestionScreen s={s} now={now} badge={badge} />
+        {canAnswer && (
+          <AnswerBox key={s.question.id} s={s} now={now} submitted={mine?.answer ?? null} onSent={reload} />
+        )}
+        {s.phase === "QUESTION_LIVE" && inPlay && me.role !== "ANSWERER" && (
+          <p className="text-center text-slate-400">
+            {mine ? "Your Answerer has submitted." : "Your group's Answerer types the answer. Discuss in Meet."}
+          </p>
+        )}
+        {inClincher && !inPlay && (
+          <p className="text-center text-xl text-amber-400">Clincher in progress. Your group is watching.</p>
+        )}
+        <RevealPanel r={r} questionId={s.question.id} myGroupId={me.groupId} />
       </main>
     );
   }
@@ -102,6 +123,25 @@ export default function PlayPage() {
             Skip
           </button>
         </div>
+      </Shell>
+    );
+  }
+
+  if (s.phase === "ROUND_SCOREBOARD" || s.phase === "FINAL") {
+    return (
+      <Shell>
+        {r?.standings ? (
+          <>
+            {s.phase === "FINAL" && <Podium rows={r.standings} />}
+            <Scoreboard
+              rows={r.standings}
+              title={s.phase === "FINAL" ? "Final standings" : "Round scoreboard"}
+              highlight={me.groupId}
+            />
+          </>
+        ) : (
+          <p className="my-auto text-center text-slate-400">Loading scores...</p>
+        )}
       </Shell>
     );
   }

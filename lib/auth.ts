@@ -47,3 +47,19 @@ export const cookieOpts = (maxAge: number) => ({
   path: "/",
   maxAge,
 });
+
+// Simple in-memory limiter: max `limit` hits per `windowMs` for a given key.
+// Fine for one Node instance; on serverless each instance has its own counter.
+const hits = new Map<string, number[]>();
+
+export function rateLimit(key: string, limit = 10, windowMs = 10_000): boolean {
+  const now = Date.now();
+  const recent = (hits.get(key) ?? []).filter((t) => now - t < windowMs);
+  if (recent.length >= limit) {
+    hits.set(key, recent);
+    return false; // blocked
+  }
+  recent.push(now);
+  hits.set(key, recent);
+  return true; // allowed
+}
