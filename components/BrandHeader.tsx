@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 import SoundControls from "@/components/SoundControls";
+import OfficersButton from "@/components/OfficersButton";
 
 type BrandHeaderProps = {
   live?: boolean;
@@ -9,7 +10,9 @@ type BrandHeaderProps = {
   className?: string;
   /** Slim strip for projector/board screens */
   compact?: boolean;
-  /** Right-side slot (e.g. sound / music buttons) */
+  /** Show the "Officers" button (default true) */
+  officers?: boolean;
+  /** Right-side slot (e.g. extra buttons) */
   children?: ReactNode;
 };
 
@@ -19,6 +22,7 @@ export function BrandHeader({
   subtitle = "DOST Scholars’ Alliance · A.Y. 2026–2027",
   className = "",
   compact = false,
+  officers = true,
   children,
 }: BrandHeaderProps) {
   return (
@@ -44,14 +48,12 @@ export function BrandHeader({
           LIVE
         </div>
       )}
-      <div className={`flex items-center gap-1.5 ${live ? "" : "ml-auto"}`}>
-        {children}
-      </div>
 
       <div className={`flex items-center gap-1.5 ${live ? "" : "ml-auto"}`}>
+        {officers && <OfficersButton compact={compact} />}
         <SoundControls music={compact} />
-            {children}
-        </div>
+        {children}
+      </div>
     </header>
   );
 }
