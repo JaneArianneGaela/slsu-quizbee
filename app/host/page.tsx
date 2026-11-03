@@ -8,7 +8,37 @@ type P = { id: string; full_name: string; college: string; group_id: number | nu
 type Roster = { participants: P[]; registration_open: boolean; max_participants: number; phase: string };
 
 const TARGET: Record<string, number> = { CEN: 14, CAS: 6, CAG: 5, CIT: 3, CTE: 2 };
-const input = "rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 outline-none focus:border-amber-400";
+const input =
+  "min-h-11 rounded-xl border-2 border-royal/30 bg-white px-3 py-2 text-navy outline-none focus:border-royal focus:ring-4 focus:ring-sky-300/40";
+
+function Ring({ college, count, target }: { college: string; count: number; target: number }) {
+  const R = 42;
+  const C = 2 * Math.PI * R;
+  const pct = target > 0 ? Math.min(count / target, 1) : 0;
+  const state = count === target ? "ok" : count < target ? "low" : "over";
+  const stroke = state === "ok" ? "#16A36A" : state === "low" ? "#E0A100" : "#E5484D";
+  const text = state === "ok" ? "text-[#0B7A4D]" : state === "low" ? "text-[#8A5A00]" : "text-[#B4232A]";
+  const word = state === "ok" ? "complete" : state === "low" ? "below target" : "over target";
+  return (
+    <div className="glass !p-3 text-center" style={{ animation: "up .5s ease backwards" }}>
+      <div className="relative mx-auto h-28 w-28" role="img" aria-label={`${college}: ${count} of ${target}, ${word}`}>
+        <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90" aria-hidden>
+          <circle cx="50" cy="50" r={R} fill="none" stroke="#EAF3FF" strokeWidth="10" />
+          <circle
+            cx="50" cy="50" r={R} fill="none" stroke={stroke} strokeWidth="10" strokeLinecap="round"
+            strokeDasharray={`${C * pct} ${C}`}
+            style={{ transition: "stroke-dasharray .6s ease, stroke .3s" }}
+          />
+        </svg>
+        <div className={`absolute inset-0 flex items-center justify-center font-display text-3xl tabular-nums ${text}`}>
+          {count}
+          <span className="text-lg opacity-80">/{target}</span>
+        </div>
+      </div>
+      <div className="mt-1 font-display text-lg uppercase tracking-[.18em] text-navy-deep">{college}</div>
+    </div>
+  );
+}
 
 export default function HostPage() {
   const [authed, setAuthed] = useState<boolean | null>(null);
@@ -63,23 +93,34 @@ export default function HostPage() {
     load();
   }
 
-  if (authed === null) return <main className="p-8 text-slate-400">Loading...</main>;
+  if (authed === null)
+    return (
+      <main className="grid min-h-dvh place-items-center p-8 font-display text-2xl uppercase tracking-[.2em] text-mute">
+        Loading...
+      </main>
+    );
 
   if (!authed) {
     return (
-      <main className="min-h-screen flex items-center justify-center p-6">
-        <form onSubmit={login} className="w-full max-w-sm space-y-4">
-          <h1 className="text-3xl font-bold">Quiz Master Login</h1>
+      <main className="flex min-h-dvh items-center justify-center p-6 text-navy">
+        <form onSubmit={login} className="glass w-full max-w-sm space-y-4" style={{ animation: "up .5s ease backwards" }}>
+          <p className="eyebrow">Restricted</p>
+          <h1 className="font-display text-4xl uppercase tracking-wide text-navy-deep">Quiz Master Login</h1>
           <input
             type="password"
             autoFocus
             className={input + " w-full text-lg"}
             placeholder="Password"
+            aria-label="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {error && <p className="text-red-400">{error}</p>}
-          <button className="w-full rounded-xl bg-amber-400 py-3 text-lg font-bold text-slate-950">Enter</button>
+          {error && (
+            <p role="alert" className="rounded-xl border-2 border-red-300 bg-red-50 p-3 font-semibold text-red-800">
+              {error}
+            </p>
+          )}
+          <button className="btn-primary w-full">Enter</button>
         </form>
       </main>
     );
@@ -90,23 +131,33 @@ export default function HostPage() {
   const open = roster?.registration_open ?? true;
 
   return (
-    <main className="mx-auto max-w-5xl p-6 space-y-6">
-      <header className="flex flex-wrap items-center justify-between gap-4">
+    <main className="mx-auto max-w-5xl space-y-6 p-6 text-navy">
+      <header className="glass flex flex-wrap items-center justify-between gap-4 !p-5">
         <div>
-          <h1 className="text-3xl font-bold">Quiz Master Console</h1>
-          <p className="text-slate-400">
-            Phase: <span className="text-amber-400 font-semibold">{roster?.phase}</span>
+          <p className="eyebrow">Control room</p>
+          <h1 className="font-display text-4xl uppercase tracking-wide text-navy-deep md:text-5xl">
+            Quiz Master Console
+          </h1>
+          <p className="mt-1 font-semibold text-mute">
+            Phase:{" "}
+            <span className="rounded-full bg-navy px-3 py-0.5 font-display tracking-widest text-white">
+              {roster?.phase}
+            </span>
           </p>
         </div>
         <button
           onClick={() => call("/api/host/registration", "POST", { open: !open })}
-          className={`rounded-xl px-6 py-3 text-lg font-bold text-slate-950 ${open ? "bg-red-400" : "bg-emerald-400"}`}
+          className={open ? "btn-primary !bg-none !bg-[#B4232A] !shadow-none" : "btn-gold"}
         >
           {open ? "Close registration" : "Reopen registration"}
         </button>
       </header>
 
-      {error && <p className="rounded-lg bg-red-950 border border-red-800 p-3 text-red-300">{error}</p>}
+      {error && (
+        <p role="alert" className="rounded-xl border-2 border-red-300 bg-red-50 p-3 font-semibold text-red-800">
+          {error}
+        </p>
+      )}
 
       <HostGrouping
         phase={roster?.phase ?? ""}
@@ -116,105 +167,118 @@ export default function HostPage() {
       />
       <HostQuiz />
 
-      <section className="grid grid-cols-3 md:grid-cols-6 gap-3">
-        <div className="rounded-xl bg-slate-900 border border-slate-700 p-4 text-center">
-          <div className="text-3xl font-extrabold">
+      <section className="grid grid-cols-2 gap-3 md:grid-cols-6">
+        <div className="stat flex flex-col justify-center">
+          <b>
             {list.length}/{roster?.max_participants}
-          </div>
-          <div className="text-slate-400 text-sm">Registered</div>
+          </b>
+          <span>REGISTERED</span>
         </div>
         {COLLEGES.map((c) => (
-          <div key={c} className="rounded-xl bg-slate-900 border border-slate-700 p-4 text-center">
-            <div className="text-3xl font-extrabold">
-              {counts[c]}
-              <span className="text-slate-500 text-lg">/{TARGET[c]}</span>
-            </div>
-            <div className="text-slate-400 text-sm">{c}</div>
-          </div>
+          <Ring key={c} college={c} count={counts[c]} target={TARGET[c]} />
         ))}
       </section>
 
-      <section className="rounded-xl border border-slate-700 overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-slate-900 text-slate-400 text-sm">
-            <tr>
-              <th className="p-3">#</th>
-              <th className="p-3">Name</th>
-              <th className="p-3">College</th>
-              <th className="p-3 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {list.map((p, i) => (
-              <tr key={p.id} className="border-t border-slate-800">
-                <td className="p-3 text-slate-500">{i + 1}</td>
-                {editId === p.id ? (
-                  <>
-                    <td className="p-3">
-                      <input className={input + " w-full"} value={editName} onChange={(e) => setEditName(e.target.value)} />
-                    </td>
-                    <td className="p-3">
-                      <select className={input} value={editCollege} onChange={(e) => setEditCollege(e.target.value)}>
-                        {COLLEGES.map((c) => (
-                          <option key={c}>{c}</option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="p-3 text-right space-x-3">
-                      <button
-                        className="text-emerald-400"
-                        onClick={async () => {
-                          await call(`/api/host/participants/${p.id}`, "PATCH", {
-                            fullName: editName,
-                            college: editCollege,
-                          });
-                          setEditId(null);
-                        }}
-                      >
-                        Save
-                      </button>
-                      <button className="text-slate-400" onClick={() => setEditId(null)}>
-                        Cancel
-                      </button>
-                    </td>
-                  </>
-                ) : (
-                  <>
-                    <td className="p-3 font-medium">{p.full_name}</td>
-                    <td className="p-3">{p.college}</td>
-                    <td className="p-3 text-right space-x-4">
-                      <button
-                        className="text-amber-400"
-                        onClick={() => {
-                          setEditId(p.id);
-                          setEditName(p.full_name);
-                          setEditCollege(p.college);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="text-red-400"
-                        onClick={() => {
-                          if (confirm(`Remove ${p.full_name}?`)) call(`/api/host/participants/${p.id}`, "DELETE");
-                        }}
-                      >
-                        Remove
-                      </button>
-                    </td>
-                  </>
-                )}
-              </tr>
-            ))}
-            {!list.length && (
+      <section className="glass !p-0">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead className="bg-ice text-sm font-bold uppercase tracking-widest text-mute">
               <tr>
-                <td colSpan={4} className="p-6 text-center text-slate-500">
-                  No one has registered yet.
-                </td>
+                <th className="p-3">#</th>
+                <th className="p-3">Name</th>
+                <th className="p-3">College</th>
+                <th className="p-3 text-right">Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {list.map((p, i) => (
+                <tr key={p.id} className="border-t border-royal/15 odd:bg-white/60">
+                  <td className="p-3 font-semibold text-mute">{i + 1}</td>
+                  {editId === p.id ? (
+                    <>
+                      <td className="p-3">
+                        <input
+                          className={input + " w-full"}
+                          aria-label="Full name"
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                        />
+                      </td>
+                      <td className="p-3">
+                        <select
+                          className={input}
+                          aria-label="College"
+                          value={editCollege}
+                          onChange={(e) => setEditCollege(e.target.value)}
+                        >
+                          {COLLEGES.map((c) => (
+                            <option key={c}>{c}</option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="space-x-2 p-3 text-right">
+                        <button
+                          className="min-h-11 rounded-full bg-[#0B7A4D] px-4 font-bold text-white"
+                          onClick={async () => {
+                            await call(`/api/host/participants/${p.id}`, "PATCH", {
+                              fullName: editName,
+                              college: editCollege,
+                            });
+                            setEditId(null);
+                          }}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="min-h-11 rounded-full border-2 border-mute px-4 font-bold text-mute"
+                          onClick={() => setEditId(null)}
+                        >
+                          Cancel
+                        </button>
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td className="p-3 font-bold text-navy-deep">{p.full_name}</td>
+                      <td className="p-3 font-semibold">{p.college}</td>
+                      <td className="space-x-2 p-3 text-right">
+                        <button
+                          className="min-h-11 rounded-full border-2 border-royal px-4 font-bold text-royal transition hover:bg-ice"
+                          onClick={() => {
+                            setEditId(p.id);
+                            setEditName(p.full_name);
+                            setEditCollege(p.college);
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="min-h-11 rounded-full border-2 border-[#B4232A] px-4 font-bold text-[#B4232A] transition hover:bg-red-50"
+                          onClick={() => {
+                            if (confirm(`Remove ${p.full_name}?`)) call(`/api/host/participants/${p.id}`, "DELETE");
+                          }}
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+              {!list.length && (
+                <tr>
+                  <td colSpan={4} className="dotgrid p-10 text-center">
+                    <div className="text-5xl" aria-hidden>👥</div>
+                    <div className="mt-2 font-display text-2xl uppercase tracking-widest text-navy-deep">
+                      No one has registered yet.
+                    </div>
+                    <p className="mt-1 font-medium text-mute">Participants will appear here as they sign up.</p>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </section>
     </main>
   );

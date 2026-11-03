@@ -5,6 +5,10 @@ import QuestionScreen from "@/components/QuestionScreen";
 import { useResults } from "@/lib/useResults";
 import RevealPanel from "@/components/RevealPanel";
 import { Scoreboard, Podium } from "@/components/Scoreboard";
+import { sfx } from "@/lib/sound";
+
+const HAZARD =
+  "repeating-linear-gradient(-45deg, #B4232A 0 14px, #FFC93C 14px 28px)";
 
 export default function HostQuiz() {
   const { s, now, load } = useQuizState();
@@ -25,6 +29,7 @@ export default function HostQuiz() {
         });
         const d = await res.json().catch(() => ({}));
         if (!res.ok) setError(d.error ?? "Action failed.");
+        else if (action === "start" || action === "start_clincher") sfx.start();
       } catch {
         setError("Network error.");
       } finally {
@@ -86,10 +91,13 @@ export default function HostQuiz() {
   if (!s || !s.isQm || ["REGISTRATION", "GROUPING", "ROLES"].includes(s.phase)) return null;
 
   return (
-    <section className="space-y-4 rounded-2xl border border-amber-400/40 bg-slate-900 p-5">
+    <section className="glass space-y-5 text-navy" style={{ border: "2px solid #E0A100" }}>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-2xl font-bold">Quiz Control</h2>
-        <span className="font-semibold text-amber-400">
+        <div>
+          <p className="eyebrow">Live control</p>
+          <h2 className="font-display text-4xl uppercase tracking-wide text-navy-deep">Quiz Control</h2>
+        </div>
+        <span className="rounded-full bg-navy px-4 py-1.5 font-display text-lg tracking-widest text-white">
           {ph}
           {paused ? " (PAUSED)" : ""}
         </span>
@@ -99,42 +107,52 @@ export default function HostQuiz() {
         <button
           disabled={busy}
           onClick={primary.run}
-          className="w-full rounded-2xl bg-amber-400 py-6 text-3xl font-extrabold text-slate-950 disabled:opacity-50"
+          className="btn-gold w-full !min-h-28 !rounded-2xl !py-8 !text-4xl md:!text-5xl"
         >
-          {primary.label} <span className="text-base font-normal">(Space)</span>
+          {primary.label}{" "}
+          <span className="font-sans text-lg font-bold normal-case tracking-normal opacity-80">(Space)</span>
         </button>
       )}
 
       {live && (
-        <div className="flex flex-wrap gap-3">
-          <button
-            disabled={busy}
-            onClick={() => act(paused ? "resume" : "pause")}
-            className="rounded-lg border border-slate-600 px-5 py-2 font-semibold"
-          >
+        <div className="flex flex-wrap items-center gap-3">
+          <button disabled={busy} onClick={() => act(paused ? "resume" : "pause")} className="btn-ghost">
             {paused ? "▶ Resume" : "⏸ Pause"}
           </button>
-          <button disabled={busy} onClick={() => act("add_time", 15)} className="rounded-lg border border-slate-600 px-5 py-2 font-semibold">
+          <button disabled={busy} onClick={() => act("add_time", 15)} className="btn-ghost">
             +15 s
           </button>
-          <button disabled={busy} onClick={() => act("add_time", 30)} className="rounded-lg border border-slate-600 px-5 py-2 font-semibold">
+          <button disabled={busy} onClick={() => act("add_time", 30)} className="btn-ghost">
             +30 s
           </button>
-          <span className="self-center text-sm text-slate-500">Shortcuts: Space = next · R = reveal · S = scoreboard</span>
+          <span className="self-center text-sm font-semibold text-mute">
+            Shortcuts: Space = next · R = reveal · S = scoreboard
+          </span>
         </div>
       )}
 
-      {error && <p className="rounded-lg border border-red-800 bg-red-950 p-3 text-red-300">{error}</p>}
+      {error && (
+        <p role="alert" className="rounded-2xl border-2 border-red-300 bg-red-50 p-3 font-semibold text-red-800">
+          {error}
+        </p>
+      )}
 
+      {/* no `sound` prop: the host panel stays silent, the projector board plays the timer sounds */}
       {q && s && <QuestionScreen s={s} now={now} small />}
 
       {q?.correct && (
-        <div className="rounded-xl border-2 border-amber-400 bg-amber-400/10 p-4">
-          <div className="text-sm font-semibold text-amber-400">QM ONLY · CORRECT ANSWER (don&apos;t share this screen)</div>
-          <div className="text-3xl font-extrabold">{q.correct}</div>
-          {q.accepted && q.accepted.length > 0 && (
-            <div className="text-slate-400">Accepted: {q.accepted.join(" | ")}</div>
-          )}
+        <div className="rounded-2xl p-[6px]" style={{ background: HAZARD }}>
+          <div className="rounded-xl bg-white p-4">
+            <div className="inline-block rounded-full bg-[#B4232A] px-3 py-1 font-display text-sm tracking-[.18em] text-white">
+              QM ONLY. Do not share this screen.
+            </div>
+            <div className="mt-2 font-display text-4xl uppercase tracking-wide text-navy-deep md:text-5xl">
+              {q.correct}
+            </div>
+            {q.accepted && q.accepted.length > 0 && (
+              <div className="mt-1 font-semibold text-mute">Accepted: {q.accepted.join(" | ")}</div>
+            )}
+          </div>
         </div>
       )}
 
@@ -144,9 +162,9 @@ export default function HostQuiz() {
         <>
           <Scoreboard rows={r.standings} title="Round scoreboard" />
           {lastOverall && tied.length > 0 && (
-            <div className="flex items-center gap-3">
-              <p className="text-amber-400">Tie for a prize position: Group {tied.join(", ")}.</p>
-              <button disabled={busy} onClick={() => act("finish")} className="text-sm text-slate-400 underline">
+            <div className="flex flex-wrap items-center gap-3 rounded-2xl border-2 border-gold bg-[#FFF3C7] p-3">
+              <p className="font-bold text-[#6B4700]">Tie for a prize position: Group {tied.join(", ")}.</p>
+              <button disabled={busy} onClick={() => act("finish")} className="min-h-11 text-sm font-bold text-royal underline disabled:opacity-50">
                 Skip clincher and finish
               </button>
             </div>
@@ -158,7 +176,7 @@ export default function HostQuiz() {
           <Podium rows={r.standings} />
           <Scoreboard rows={r.standings} title="Final standings" />
           {tied.length > 0 && (
-            <button disabled={busy} onClick={() => act("start_clincher")} className="rounded-lg bg-amber-400 px-5 py-2 font-bold text-slate-950">
+            <button disabled={busy} onClick={() => act("start_clincher")} className="btn-gold">
               Still tied (Group {tied.join(", ")}): Start Clincher
             </button>
           )}
@@ -169,7 +187,7 @@ export default function HostQuiz() {
         onClick={() => {
           if (confirm("Reset the quiz back to the lobby? Question order and all answers are cleared. Participants and groups are kept.")) act("reset_quiz");
         }}
-        className="text-sm text-red-400 underline"
+        className="min-h-11 text-sm font-bold text-[#B4232A] underline"
       >
         Reset quiz (back to lobby)
       </button>
