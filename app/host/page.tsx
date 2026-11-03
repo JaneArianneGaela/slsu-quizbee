@@ -1,4 +1,6 @@
 "use client";
+import HostQuiz from "@/components/HostQuiz";
+import HostGrouping from "@/components/HostGrouping";
 import { useCallback, useEffect, useState } from "react";
 import { COLLEGES } from "@/lib/constants";
 
@@ -105,6 +107,14 @@ export default function HostPage() {
       </header>
 
       {error && <p className="rounded-lg bg-red-950 border border-red-800 p-3 text-red-300">{error}</p>}
+
+      <HostGrouping
+        phase={roster?.phase ?? ""}
+        total={list.length}
+        max={roster?.max_participants ?? 30}
+        onChange={load}
+      />
+      <HostQuiz />
 
       <section className="grid grid-cols-3 md:grid-cols-6 gap-3">
         <div className="rounded-xl bg-slate-900 border border-slate-700 p-4 text-center">

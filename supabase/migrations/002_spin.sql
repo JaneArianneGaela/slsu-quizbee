@@ -1,0 +1,1 @@
+alter table public.session_state add column if not exists spin_at timestamptz;
