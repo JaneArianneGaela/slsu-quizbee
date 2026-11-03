@@ -1,0 +1,909 @@
+[
+  {
+    "id": "R1-Q01",
+    "round": "R1",
+    "order_no": 1,
+    "source_college": "CAG",
+    "input_mode": "NUMBER",
+    "prompt": "A rectangular crop trial plot is 20 m long and 15 m wide. What is its area in square meters? Enter the number only.",
+    "options": null,
+    "correct": "300",
+    "accepted": [
+      "300"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Numeric exact match; unit is supplied by the question."
+  },
+  {
+    "id": "R1-Q02",
+    "round": "R1",
+    "order_no": 2,
+    "source_college": "CIT",
+    "input_mode": "NUMBER",
+    "prompt": "For y = sin(x) − cos(x), evaluate dy/dx at x = 0 radians. Enter the numerical value only.",
+    "options": null,
+    "correct": "1",
+    "accepted": [
+      "1",
+      "1.0"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Numeric exact match."
+  },
+  {
+    "id": "R1-Q03",
+    "round": "R1",
+    "order_no": 3,
+    "source_college": "CTE",
+    "input_mode": "NUMBER",
+    "prompt": "A service vehicle travels 150 meters in 10 seconds at constant speed. What is its speed in meters per second? Enter the number only.",
+    "options": null,
+    "correct": "15",
+    "accepted": [
+      "15",
+      "15.0"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Numeric exact match."
+  },
+  {
+    "id": "R1-Q04",
+    "round": "R1",
+    "order_no": 4,
+    "source_college": "CAS",
+    "input_mode": "NUMBER",
+    "prompt": "Two heterozygous parents (Bb × Bb) have offspring. What percentage of offspring is expected to have genotype bb? Enter a whole-number percentage without the percent sign.",
+    "options": null,
+    "correct": "25",
+    "accepted": [
+      "25",
+      "25%"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Accept 25 as the required percent value; listed equivalents may also be accepted."
+  },
+  {
+    "id": "R1-Q05",
+    "round": "R1",
+    "order_no": 5,
+    "source_college": "CAS",
+    "input_mode": "FRACTION",
+    "prompt": "A bag contains 3 red marbles and 5 blue marbles. One marble is selected at random. What is the probability of selecting a red marble? Give the fraction in simplest form.",
+    "options": null,
+    "correct": "3/8",
+    "accepted": [
+      "3/8",
+      "0.375",
+      "37.5%"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Accept the simplified fraction or the equivalent decimal/percentage listed."
+  },
+  {
+    "id": "R1-Q06",
+    "round": "R1",
+    "order_no": 6,
+    "source_college": "CEN",
+    "input_mode": "IPV4",
+    "prompt": "A workstation has IPv4 address 192.168.1.10/24. What is its network address? Enter the IPv4 address only.",
+    "options": null,
+    "correct": "192.168.1.0",
+    "accepted": [
+      "192.168.1.0"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Normalized exact IPv4 match."
+  },
+  {
+    "id": "R1-Q07",
+    "round": "R1",
+    "order_no": 7,
+    "source_college": "CEN",
+    "input_mode": "NUMBER",
+    "prompt": "A complete truth table contains three independent propositional variables. How many rows are required? Enter the number only.",
+    "options": null,
+    "correct": "8",
+    "accepted": [
+      "8"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Numeric exact match."
+  },
+  {
+    "id": "R1-Q08",
+    "round": "R1",
+    "order_no": 8,
+    "source_college": "CEN",
+    "input_mode": "TEXT",
+    "prompt": "Which network device forwards Ethernet frames within a local area network using MAC addresses?",
+    "options": null,
+    "correct": "SWITCH",
+    "accepted": [
+      "SWITCH",
+      "NETWORK SWITCH"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Case-insensitive exact match; accept listed aliases."
+  },
+  {
+    "id": "R1-Q09",
+    "round": "R1",
+    "order_no": 9,
+    "source_college": "CEN",
+    "input_mode": "CHOICE",
+    "prompt": "In Cisco Packet Tracer, which path opens the IPv4 configuration settings on a PC?",
+    "options": {
+      "A": "PC > Desktop > IP Configuration",
+      "B": "PC > Physical > Power Supply",
+      "C": "PC > Config > Display Settings",
+      "D": "PC > Programming > Terminal"
+    },
+    "correct": "A",
+    "accepted": [
+      "A"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Grade by option ID A."
+  },
+  {
+    "id": "R1-Q10",
+    "round": "R1",
+    "order_no": 10,
+    "source_college": "CAG",
+    "input_mode": "LIST",
+    "prompt": "List the three primary plant macronutrients represented by the fertilizer notation N--P--K. Give the full nutrient names or their symbols in N--P--K order, separated by commas.",
+    "options": null,
+    "correct": "NITROGEN, PHOSPHORUS, POTASSIUM",
+    "accepted": [
+      "NITROGEN, PHOSPHORUS, POTASSIUM",
+      "NITROGEN,PHOSPHORUS,POTASSIUM",
+      "NITROGEN;PHOSPHORUS;POTASSIUM",
+      "N,P,K"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Require all three tokens in the stated order; accept full names or N,P,K symbols."
+  },
+  {
+    "id": "R1-Q11",
+    "round": "R1",
+    "order_no": 11,
+    "source_college": "CAG",
+    "input_mode": "TEXT",
+    "prompt": "What is the name of the agricultural chemical used specifically to control unwanted weeds?",
+    "options": null,
+    "correct": "HERBICIDE",
+    "accepted": [
+      "HERBICIDE",
+      "WEED KILLER"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Case-insensitive exact match; accept listed alias."
+  },
+  {
+    "id": "R1-Q12",
+    "round": "R1",
+    "order_no": 12,
+    "source_college": "CAS",
+    "input_mode": "CHOICE",
+    "prompt": "During DNA replication, adenine on one DNA strand pairs with which nitrogenous base on the complementary strand?",
+    "options": {
+      "A": "Cytosine",
+      "B": "Thymine",
+      "C": "Guanine",
+      "D": "Uracil"
+    },
+    "correct": "B",
+    "accepted": [
+      "B"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Grade by option ID B."
+  },
+  {
+    "id": "R1-Q13",
+    "round": "R1",
+    "order_no": 13,
+    "source_college": "CIT",
+    "input_mode": "NUMBER",
+    "prompt": "Using the forward difference quotient, estimate the derivative of f(x) = 3x³ + 4x² at x = 5 with h = 2. Enter the numerical value only.",
+    "options": null,
+    "correct": "375",
+    "accepted": [
+      "375"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Numeric exact match."
+  },
+  {
+    "id": "R1-Q14",
+    "round": "R1",
+    "order_no": 14,
+    "source_college": "CEN",
+    "input_mode": "NUMBER",
+    "prompt": "Convert the binary number 101101₂ to its decimal equivalent. Enter the number only.",
+    "options": null,
+    "correct": "45",
+    "accepted": [
+      "45"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Numeric exact match."
+  },
+  {
+    "id": "R1-Q15",
+    "round": "R1",
+    "order_no": 15,
+    "source_college": "CEN",
+    "input_mode": "TEXT",
+    "prompt": "What is the 48-bit hardware address assigned to a network interface commonly called?",
+    "options": null,
+    "correct": "MAC ADDRESS",
+    "accepted": [
+      "MAC ADDRESS",
+      "MAC"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Case-insensitive exact match; accept listed alias only."
+  },
+  {
+    "id": "R1-Q16",
+    "round": "R1",
+    "order_no": 16,
+    "source_college": "CEN",
+    "input_mode": "CHOICE",
+    "prompt": "In propositional logic, which symbol represents the AND connective?",
+    "options": {
+      "A": "∧",
+      "B": "∨",
+      "C": "¬",
+      "D": "→"
+    },
+    "correct": "A",
+    "accepted": [
+      "A"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Grade by option ID A; if using text input, also accept the exact symbol ∧."
+  },
+  {
+    "id": "R1-Q17",
+    "round": "R1",
+    "order_no": 17,
+    "source_college": "CEN",
+    "input_mode": "TEXT",
+    "prompt": "Write the 8-bit binary representation of decimal 13. Include all eight bits.",
+    "options": null,
+    "correct": "00001101",
+    "accepted": [
+      "00001101"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Exact text match; leading zeroes are required."
+  },
+  {
+    "id": "R1-Q18",
+    "round": "R1",
+    "order_no": 18,
+    "source_college": "CAS",
+    "input_mode": "TEXT",
+    "prompt": "In a typical eukaryotic cell, which membrane-bound organelle houses most of the cell's DNA?",
+    "options": null,
+    "correct": "NUCLEUS",
+    "accepted": [
+      "NUCLEUS"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Case-insensitive exact match."
+  },
+  {
+    "id": "R1-Q19",
+    "round": "R1",
+    "order_no": 19,
+    "source_college": "CEN",
+    "input_mode": "TEXT",
+    "prompt": "Write the abbreviation for Electrostatic Discharge.",
+    "options": null,
+    "correct": "ESD",
+    "accepted": [
+      "ESD",
+      "E.S.D."
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Case-insensitive exact match; periods may be ignored."
+  },
+  {
+    "id": "R1-Q20",
+    "round": "R1",
+    "order_no": 20,
+    "source_college": "CTE",
+    "input_mode": "CHOICE",
+    "prompt": "In a complete vacuum, a feather and a metal ball are released from rest at the same height. Which statement describes their fall?",
+    "options": {
+      "A": "The metal ball falls faster",
+      "B": "The feather falls faster",
+      "C": "They have the same acceleration and fall at the same rate",
+      "D": "Neither object falls"
+    },
+    "correct": "C",
+    "accepted": [
+      "C"
+    ],
+    "tolerance": 0,
+    "points": 3,
+    "time_limit_s": 30,
+    "grading_rule": "Grade by option ID C."
+  },
+  {
+    "id": "R2-Q01",
+    "round": "R2",
+    "order_no": 1,
+    "source_college": "CEN",
+    "input_mode": "NUMBER",
+    "prompt": "A network uses the IPv4 prefix /24. How many usable host addresses are available in a conventional subnet? Enter the number only.",
+    "options": null,
+    "correct": "254",
+    "accepted": [
+      "254"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Numeric exact match."
+  },
+  {
+    "id": "R2-Q02",
+    "round": "R2",
+    "order_no": 2,
+    "source_college": "CAS",
+    "input_mode": "FRACTION",
+    "prompt": "Two fair six-sided dice are rolled. What is the probability that their sum is exactly 8? Give the fraction in simplest form.",
+    "options": null,
+    "correct": "5/36",
+    "accepted": [
+      "5/36"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Require the exact simplified fraction."
+  },
+  {
+    "id": "R2-Q03",
+    "round": "R2",
+    "order_no": 3,
+    "source_college": "CAG",
+    "input_mode": "NUMBER",
+    "prompt": "Out of 200 seeds planted for a germination test, 180 germinate. What is the germination percentage? Enter the number only, without the percent sign.",
+    "options": null,
+    "correct": "90",
+    "accepted": [
+      "90",
+      "90%"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Accept 90 as the required percent value; listed equivalents may also be accepted."
+  },
+  {
+    "id": "R2-Q04",
+    "round": "R2",
+    "order_no": 4,
+    "source_college": "CEN",
+    "input_mode": "TEXT",
+    "prompt": "Convert binary 101110₂ to octal. Give the octal digits only.",
+    "options": null,
+    "correct": "56",
+    "accepted": [
+      "56",
+      "56₈"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Normalize by removing an optional base subscript, then exact match."
+  },
+  {
+    "id": "R2-Q05",
+    "round": "R2",
+    "order_no": 5,
+    "source_college": "CEN",
+    "input_mode": "TEXT",
+    "prompt": "Write the abbreviation for Dynamic Host Configuration Protocol.",
+    "options": null,
+    "correct": "DHCP",
+    "accepted": [
+      "DHCP"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Case-insensitive exact match."
+  },
+  {
+    "id": "R2-Q06",
+    "round": "R2",
+    "order_no": 6,
+    "source_college": "CIT",
+    "input_mode": "NUMBER",
+    "prompt": "Find the arc length of the parabola y² = 4x from its vertex to the point where x = 4. Round the result to two decimal places. Enter the number only.",
+    "options": null,
+    "correct": "5.92",
+    "accepted": [
+      "5.92"
+    ],
+    "tolerance": 0.005,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Accept a numeric value within ±0.005 of 5.92."
+  },
+  {
+    "id": "R2-Q07",
+    "round": "R2",
+    "order_no": 7,
+    "source_college": "CTE",
+    "input_mode": "NUMBER",
+    "prompt": "A force-vector drawing uses the scale 1 cm = 5 N. The drawn arrow is 6 cm long. What force magnitude does the arrow represent? Enter the number only.",
+    "options": null,
+    "correct": "30",
+    "accepted": [
+      "30"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Numeric exact match; unit is supplied by the question."
+  },
+  {
+    "id": "R2-Q08",
+    "round": "R2",
+    "order_no": 8,
+    "source_college": "CEN",
+    "input_mode": "TEXT",
+    "prompt": "Convert hexadecimal 3AF to octal. Give the octal digits only, without a base subscript.",
+    "options": null,
+    "correct": "1657",
+    "accepted": [
+      "1657",
+      "1657₈"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Normalize by removing an optional base subscript, then exact match."
+  },
+  {
+    "id": "R2-Q09",
+    "round": "R2",
+    "order_no": 9,
+    "source_college": "CEN",
+    "input_mode": "TEXT",
+    "prompt": "Add the binary numbers 1101₂ and 1011₂. Give the result in binary, without a base subscript.",
+    "options": null,
+    "correct": "11000",
+    "accepted": [
+      "11000",
+      "11000₂"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Normalize by removing an optional base subscript, then exact match."
+  },
+  {
+    "id": "R2-Q10",
+    "round": "R2",
+    "order_no": 10,
+    "source_college": "CAG",
+    "input_mode": "NUMBER",
+    "prompt": "A rectangular field is 100 m long and 60 m wide. Rows are spaced 0.75 m apart, and plants are spaced 0.50 m apart within each row. Assuming exact spacing across the field, how many planting positions are available? Enter the whole number only.",
+    "options": null,
+    "correct": "16000",
+    "accepted": [
+      "16000",
+      "16,000"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Numeric exact match; commas are ignored."
+  },
+  {
+    "id": "R2-Q11",
+    "round": "R2",
+    "order_no": 11,
+    "source_college": "CAS",
+    "input_mode": "FRACTION",
+    "prompt": "Three fair coins are flipped. What is the probability of getting at least one head? Give the fraction in simplest form.",
+    "options": null,
+    "correct": "7/8",
+    "accepted": [
+      "7/8"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Require the exact simplified fraction."
+  },
+  {
+    "id": "R2-Q12",
+    "round": "R2",
+    "order_no": 12,
+    "source_college": "CEN",
+    "input_mode": "IPV4",
+    "prompt": "A host has IPv4 address 192.168.10.70/26. Determine its network address. Enter the IPv4 address only.",
+    "options": null,
+    "correct": "192.168.10.64",
+    "accepted": [
+      "192.168.10.64"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Normalized exact IPv4 match."
+  },
+  {
+    "id": "R2-Q13",
+    "round": "R2",
+    "order_no": 13,
+    "source_college": "CIT",
+    "input_mode": "TEXT",
+    "prompt": "What is the name of the series expansion of a periodic function using sine and cosine terms?",
+    "options": null,
+    "correct": "FOURIER SERIES",
+    "accepted": [
+      "FOURIER SERIES",
+      "FOURIER"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Case-insensitive exact match; accept listed short form."
+  },
+  {
+    "id": "R2-Q14",
+    "round": "R2",
+    "order_no": 14,
+    "source_college": "CEN",
+    "input_mode": "TEXT",
+    "prompt": "Which Cisco IOS command displays router interface names, IPv4 addresses, and interface status in a compact list?",
+    "options": null,
+    "correct": "SHOW IP INTERFACE BRIEF",
+    "accepted": [
+      "SHOW IP INTERFACE BRIEF"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Case-insensitive exact command match; collapse repeated spaces."
+  },
+  {
+    "id": "R2-Q15",
+    "round": "R2",
+    "order_no": 15,
+    "source_college": "CAS",
+    "input_mode": "LIST",
+    "prompt": "Solve x^3^ + 10x^2^ + 11x - 70 = 0. Enter both real roots separated by a comma; either order is accepted.",
+    "options": null,
+    "correct": "2, -5, -7",
+    "accepted": [
+      "2, -5, -7",
+      "2,-5,-7",
+      "2,-7,-5",
+      "-5,2,-7",
+      "-5,-7,2",
+      "-7,2,-5",
+      "X=2,X=-5,X=-7",
+      "X=2,X=-7,X=-5",
+      "X=-5,X=2,X=-7",
+      "X=-5,X=-7,X=2",
+      "X=-7,X=2,X=-5"
+    ],
+    "tolerance": 0,
+    "points": 5,
+    "time_limit_s": 60,
+    "grading_rule": "Require exactly the set {2,-5,-7}; order is not important."
+  },
+  {
+    "id": "R3-Q01",
+    "round": "R3",
+    "order_no": 1,
+    "source_college": "CAG",
+    "input_mode": "NUMBER",
+    "prompt": "An irrigation system applies a water depth of 40 mm uniformly over a 2-hectare field. What volume of water is applied in cubic meters? Enter the number only.",
+    "options": null,
+    "correct": "800",
+    "accepted": [
+      "800"
+    ],
+    "tolerance": 0,
+    "points": 8,
+    "time_limit_s": 120,
+    "grading_rule": "Numeric exact match; accept optional cubic-meter unit."
+  },
+  {
+    "id": "R3-Q02",
+    "round": "R3",
+    "order_no": 2,
+    "source_college": "CAG",
+    "input_mode": "NUMBER",
+    "prompt": "A crop requires 90 kg of actual nitrogen per hectare. The available fertilizer contains 15% nitrogen by mass. How many kilograms of this fertilizer product are required for one hectare? Enter the number only.",
+    "options": null,
+    "correct": "600",
+    "accepted": [
+      "600"
+    ],
+    "tolerance": 0,
+    "points": 8,
+    "time_limit_s": 120,
+    "grading_rule": "Numeric exact match; unit is supplied by the question."
+  },
+  {
+    "id": "R3-Q03",
+    "round": "R3",
+    "order_no": 3,
+    "source_college": "CEN",
+    "input_mode": "NUMBER",
+    "prompt": "Set A contains 24 elements, set B contains 19 elements, and A ∩ B contains 8 elements. How many elements are in A ∪ B? Enter the number only.",
+    "options": null,
+    "correct": "35",
+    "accepted": [
+      "35"
+    ],
+    "tolerance": 0,
+    "points": 8,
+    "time_limit_s": 120,
+    "grading_rule": "Numeric exact match."
+  },
+  {
+    "id": "R3-Q04",
+    "round": "R3",
+    "order_no": 4,
+    "source_college": "CEN",
+    "input_mode": "IPV4",
+    "prompt": "A device has IPv4 address 192.168.10.34/27. What is its network address? Enter the IPv4 address only.",
+    "options": null,
+    "correct": "192.168.10.32",
+    "accepted": [
+      "192.168.10.32"
+    ],
+    "tolerance": 0,
+    "points": 8,
+    "time_limit_s": 120,
+    "grading_rule": "Normalized exact IPv4 match."
+  },
+  {
+    "id": "R3-Q05",
+    "round": "R3",
+    "order_no": 5,
+    "source_college": "CAS",
+    "input_mode": "NUMBER",
+    "prompt": "A recessive phenotype has frequency q² = 0.04 in a population at Hardy--Weinberg equilibrium. What percentage of the population is expected to be heterozygous (2pq)? Enter a whole-number percentage without the percent sign.",
+    "options": null,
+    "correct": "32",
+    "accepted": [
+      "32",
+      "32%"
+    ],
+    "tolerance": 0,
+    "points": 8,
+    "time_limit_s": 120,
+    "grading_rule": "Accept 32 as the required percent value; listed equivalents may also be accepted."
+  },
+  {
+    "id": "R3-Q06",
+    "round": "R3",
+    "order_no": 6,
+    "source_college": "CTE",
+    "input_mode": "NUMBER",
+    "prompt": "A stone is thrown vertically upward at 20 m/s. It is caught on its way down 5 m above the release point. Using g = 9.80 m/s², what is its speed when caught? Round to one decimal place and enter the number only.",
+    "options": null,
+    "correct": "17.4",
+    "accepted": [
+      "17.4",
+      "17.38"
+    ],
+    "tolerance": 0.05,
+    "points": 8,
+    "time_limit_s": 120,
+    "grading_rule": "Accept values within ±0.05 of 17.4."
+  },
+  {
+    "id": "R3-Q07",
+    "round": "R3",
+    "order_no": 7,
+    "source_college": "CEN",
+    "input_mode": "TEXT",
+    "prompt": "Subtract 11011₂ from 101101₂. Give the result in binary digits only.",
+    "options": null,
+    "correct": "10010",
+    "accepted": [
+      "10010",
+      "10010₂"
+    ],
+    "tolerance": 0,
+    "points": 8,
+    "time_limit_s": 120,
+    "grading_rule": "Normalize by removing an optional base subscript, then exact match."
+  },
+  {
+    "id": "R3-Q08",
+    "round": "R3",
+    "order_no": 8,
+    "source_college": "CEN",
+    "input_mode": "CHOICE",
+    "prompt": "A router must reach 192.168.2.0/24 through next-hop address 10.0.0.2. Which Cisco IOS command correctly creates the static route?",
+    "options": {
+      "A": "ip route 192.168.2.0 255.255.255.0 10.0.0.2",
+      "B": "ip route 10.0.0.2 255.255.255.0 192.168.2.0",
+      "C": "ip address 192.168.2.0 255.255.255.0 10.0.0.2",
+      "D": "show ip route 192.168.2.0"
+    },
+    "correct": "A",
+    "accepted": [
+      "A"
+    ],
+    "tolerance": 0,
+    "points": 8,
+    "time_limit_s": 120,
+    "grading_rule": "Grade by option ID A."
+  },
+  {
+    "id": "R3-Q09",
+    "round": "R3",
+    "order_no": 9,
+    "source_college": "CIT",
+    "input_mode": "NUMBER",
+    "prompt": "Let F(x,y,z) = (x²y)i − (z² − 3x)j + 4y²k. Evaluate the divergence ∇·F at (1, 2, 3). Enter the numerical value only.",
+    "options": null,
+    "correct": "4",
+    "accepted": [
+      "4"
+    ],
+    "tolerance": 0,
+    "points": 8,
+    "time_limit_s": 120,
+    "grading_rule": "Numeric exact match."
+  },
+  {
+    "id": "R3-Q10",
+    "round": "R3",
+    "order_no": 10,
+    "source_college": "CAS",
+    "input_mode": "NUMBER",
+    "prompt": "How many distinct arrangements can be made from all seven letters in BIOLOGY? Enter the number only.",
+    "options": null,
+    "correct": "2520",
+    "accepted": [
+      "2520"
+    ],
+    "tolerance": 0,
+    "points": 8,
+    "time_limit_s": 120,
+    "grading_rule": "Numeric exact match."
+  },
+  {
+    "id": "CL-Q01",
+    "round": "CL",
+    "order_no": 1,
+    "source_college": "CEN",
+    "input_mode": "IPV4",
+    "prompt": "A device has IPv4 address 192.168.5.77/28. What is the network address? Enter the IPv4 address only.",
+    "options": null,
+    "correct": "192.168.5.64",
+    "accepted": [
+      "192.168.5.64"
+    ],
+    "tolerance": 0,
+    "points": 0,
+    "time_limit_s": 60,
+    "grading_rule": "Normalized exact IPv4 match."
+  },
+  {
+    "id": "CL-Q02",
+    "round": "CL",
+    "order_no": 2,
+    "source_college": "CAS",
+    "input_mode": "FRACTION",
+    "prompt": "A bag contains 4 red and 6 blue marbles. Two marbles are drawn without replacement. What is the probability that both are red? Give the fraction in simplest form.",
+    "options": null,
+    "correct": "2/15",
+    "accepted": [
+      "2/15"
+    ],
+    "tolerance": 0,
+    "points": 0,
+    "time_limit_s": 60,
+    "grading_rule": "Require exact simplified fraction."
+  },
+  {
+    "id": "CL-Q03",
+    "round": "CL",
+    "order_no": 3,
+    "source_college": "CAG",
+    "input_mode": "NUMBER",
+    "prompt": "A nursery raises 2,500 seedlings. After hardening, 2,250 seedlings remain suitable for transplanting. What is the survival percentage? Enter a whole-number percentage without the percent sign.",
+    "options": null,
+    "correct": "90",
+    "accepted": [
+      "90",
+      "90%"
+    ],
+    "tolerance": 0,
+    "points": 0,
+    "time_limit_s": 60,
+    "grading_rule": "Accept 90 as the required percent value; listed equivalents may also be accepted."
+  },
+  {
+    "id": "CL-Q04",
+    "round": "CL",
+    "order_no": 4,
+    "source_college": "CIT",
+    "input_mode": "NUMBER",
+    "prompt": "For f(x,y,z) = xy² + z³, evaluate the Laplacian ∇²f at (1, 2, 3). Enter the numerical value only.",
+    "options": null,
+    "correct": "20",
+    "accepted": [
+      "20"
+    ],
+    "tolerance": 0,
+    "points": 0,
+    "time_limit_s": 60,
+    "grading_rule": "Numeric exact match."
+  },
+  {
+    "id": "CL-Q05",
+    "round": "CL",
+    "order_no": 5,
+    "source_college": "CTE",
+    "input_mode": "NUMBER",
+    "prompt": "A 2 kg object experiences a net force that produces an acceleration of 3 m/s². What is the net force in newtons? Enter the number only.",
+    "options": null,
+    "correct": "6",
+    "accepted": [
+      "6"
+    ],
+    "tolerance": 0,
+    "points": 0,
+    "time_limit_s": 60,
+    "grading_rule": "Numeric exact match."
+  }
+]

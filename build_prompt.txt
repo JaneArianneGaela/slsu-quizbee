@@ -1,0 +1,108 @@
+ROLE
+You are a senior full-stack engineer. Build a production-ready, real-time quiz competition web app called "SLSU-DOST SA STEM Quiz Bee: Battle of the Scholar Minds", deployable on Vercel. Deliver complete working code, not snippets.
+
+1. CONTEXT
+- Event: November 13, 2026, online. 30 participants (DOST scholars) on their own laptops, in 6 groups of 5 chosen at random but balanced by college.
+- Colleges and headcount: CEN 14, CAS 6, CAG 5, CIT 3, CTE 2.
+- Voice discussion happens in Google Meet, outside the app. The app never records audio or video.
+- ONE Quiz Master (QM) controls the whole flow. Every participant sees each question at the same moment.
+- Scoring is per GROUP (6 teams), not per person.
+
+2. TECH STACK
+- Next.js (App Router, TypeScript), Tailwind CSS, Supabase (Postgres + Realtime), hosted on Vercel.
+- All writes and all grading happen in server route handlers using the Supabase service role key. That key and the answer key must never reach the browser bundle.
+- Validate every request with Zod. Rate-limit the submit endpoint.
+- Env vars: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, QM_PASSWORD, SESSION_SECRET. Provide .env.example.
+- Use the legacy anon/service_role keys or the latest supabase-js so the keys work.
+
+3. LANDING PAGE (/)
+- Two large choices: "Quiz Master" and "Participant".
+- Participant goes to registration. Quiz Master enters QM_PASSWORD and gets a signed httpOnly cookie, then goes to /host.
+
+4. REGISTRATION
+- Fields: full name, college (dropdown: CEN, CAS, CAG, CIT, CTE).
+- Block duplicate name + college. Cap at 30 registrations (configurable).
+- Issue a random 4-digit PIN shown once, and an httpOnly device-token cookie. A participant who refreshes or loses connection can rejoin with name + PIN.
+- The QM sees a live roster with counts per college, can edit or remove a participant, and closes registration with a button.
+
+5. GROUPING WITH SPIN THE WHEEL
+- QM presses Spin. The SERVER computes the draw: shuffle each college with crypto-secure randomness, shuffle the 6 group labels, then deal each college round-robin across the groups, continuing from the group where the previous college stopped. This guarantees every group has 5 members and every college is within one member of even (CEN lands 2 or 3 per group).
+- Save the result, then animate a wheel that reveals each participant's group one by one (with a Skip/Fast mode).
+- After the spin, every participant sees all 6 groups with member names and colleges.
+
+6. ROLE CHOICE
+- Each participant chooses Viewer or Answerer. Each group allows exactly ONE Answerer. Claim it atomically in the database (unique constraint) so two people cannot both win. QM can reassign.
+- Viewers see questions, timer, results and rankings but have NO input element. They answer by speaking in Google Meet.
+- The Answerer is the only person who sees the answer box. The server rejects any submission from a non-Answerer.
+
+7. LOBBY
+- After roles are set, participants see a loading screen: "Waiting for the Quiz Master to start the quiz..." with their group, roles and how many groups are ready.
+- The QM console shows a readiness checklist (all 30 registered, all 6 Answerers chosen). The QM can still start with a warning.
+
+8. QUIZ ENGINE (server-authoritative state machine)
+States: REGISTRATION > GROUPING > ROLES > LOBBY > QUESTION_LIVE > LOCKED > REVEALED > (next question) ... > ROUND_SCOREBOARD > CLINCHER (only if tied) > FINAL.
+- QM buttons: Start Question, Reveal Answer, Start Next Question, Show Round Scoreboard, Start Clincher, Finish. Also Pause/Add Time, and Manual Override of a submission (mark correct or wrong for protests).
+- A single session_state row holds phase, current question, started_at, deadline and revealed. Clients follow it through Supabase Realtime (Broadcast or Postgres changes), with a 2-second polling fallback and a full state fetch on load or reconnect.
+- Questions are sent to clients ONLY when a question starts (prompt and options, never the answer). The answer and accepted variants are sent only at reveal.
+- Question order: 20 Easy, 15 Moderate, 10 Difficult, kept in separate rounds. Shuffle once on the server per session, save the order, and serve the same order to everyone. Never shuffle in the browser.
+- Points and time limits: Easy 3 points / 30 s, Moderate 5 points / 60 s, Difficult 8 points / 120 s (maximum 215). Clincher: 5 items, 60 s each, used only for ties.
+
+9. TIMER
+- The server stores the deadline. Clients fetch a server-time offset on load and draw the countdown from it, so every screen matches.
+- Show a HUGE countdown that fills most of the screen. Colour shifts as time drops, with a pulse and shake in the last 10 seconds, so participants feel the pressure.
+- When the timer reaches zero the input locks and the server rejects any answer received after deadline + grace (configurable, default 250 ms for network delay). If the Answerer has typed something but not submitted, auto-submit the draft at zero.
+- One submission per group per question. After submitting, show "Answer locked".
+
+10. ANSWER INPUT STANDARDIZATION
+- Everything is CAPITAL LETTERS. Convert on every keystroke, and store the answer key in capitals.
+- Each question has an input_mode that limits the allowed characters: NUMBER (digits, minus, decimal point), FRACTION (digits and /), IPV4 (digits and dots), CHOICE (single-select A to D buttons, no typing), TEXT (letters, digits, spaces, hyphen), LIST (letters, digits, commas).
+- The server normalizes (trim, collapse spaces, uppercase, remove thousands separators) and grades against the stored answer plus the explicit accepted variants. No fuzzy matching. Apply numeric tolerance only where a question defines it.
+
+11. REVEAL AND RESULTS
+- The QM presses Reveal Answer after the timer ends (suspense is the QM's choice). All screens show the correct answer, the list of groups that answered correctly, and each group's own result.
+- Show each group's current place on the leaderboard (for example "3rd place, 42 pts") as an overlay for about 5 seconds only (configurable), then hide it.
+- After every question show each group a result strip for the round, with a tick or cross per question number. Example: numbers 1 to 10 on the top row, then x / / x ... underneath.
+- At the end of each round the QM presses Show Round Scoreboard: all 6 groups with round points, total and place, revealed from last to first with animation. All groups see all scores.
+- Ranking: total points, then number correct, then lower total answering time. If a prize position is tied, the QM starts the Clincher for only the tied groups.
+
+12. SOUND
+- Ticking clock while a question is live. Faster tempo for Moderate. For Difficult, add a low heartbeat and rising tension in the last 10 seconds.
+- Time-up buzzer, drumroll on Reveal, chime for correct, soft buzz for wrong, fanfare for scoreboards.
+- Browsers block autoplay, so show an "Enable sound" button in the lobby. Generate sounds with the Web Audio API (no asset files needed) or use files in /public/sounds. The QM can mute everything.
+
+13. INTEGRITY AND ANTI-CHEAT
+Build these, and say in the README what cannot be prevented:
+- Block copy, cut, paste, drag, right-click and text selection (CSS user-select none plus event handlers). The answer box rejects paste.
+- Detect tab or window switching with visibilitychange and blur. Log each event to integrity_events and show a live feed on the QM console. Do not auto-penalize.
+- Require fullscreen to play, and log each exit.
+- Overlay a faint watermark of the participant name on the question screen. On the PrintScreen key, hide the question and log it. State that other screenshot tools cannot be detected.
+- One active session per participant. A second login for the same participant is rejected and logged.
+- A rules screen before play: camera on in Google Meet, paper and ballpen visible, no phones, one device per member, no AI tools. Participants tick "I agree" to continue.
+
+14. QUIZ MASTER CONSOLE (/host)
+- Live view of phase, current question (with the answer visible only to the QM), timer, how many of the 6 groups have submitted and which have not, roster, group readiness, integrity feed, and standings.
+- Large buttons plus keyboard shortcuts (Space to start or advance, R to reveal, S for scoreboard).
+- Export final results as CSV. Reset session with a confirmation.
+- Optional read-only /board page for a projector.
+
+15. DATABASE
+Create a SQL migration with these tables: participants, groups, questions, session_state, submissions (unique group_id + question_id), integrity_events. Enable RLS. Anonymous clients get read access only to non-sensitive views. The questions table is never readable from the browser. Provide a seed script that loads questions from questions.seed.json with this schema: id, round, order_no, source_college (admin only, never shown), input_mode, prompt, options, correct, accepted[], tolerance, points, time_limit_s. Start with 3 sample questions per round, then I will paste my 45 main and 5 clincher questions.
+
+16. QUALITY
+- Must handle 30 simultaneous users and survive refresh, reconnect and a QM page reload without losing state.
+- Large, readable fonts, dark theme, responsive down to a 13-inch laptop.
+- Clear error messages and loading states. No secrets in client code.
+
+17. DELIVERABLES
+- Full file tree and all code, SQL migration, seed script, .env.example.
+- A README with steps: create Supabase project, run the migration, push to GitHub, import to Vercel, add env vars, deploy.
+- A test script that simulates 30 clients and runs a full 3-question game.
+- An acceptance checklist I can run through before the event.
+
+18. ACCEPTANCE CRITERIA
+- Registration, spin, role choice and lobby work for 30 simulated users.
+- Every screen shows the same question within about 1 second of the QM pressing Start.
+- No submission is accepted after the deadline plus grace, and only the Answerer can submit.
+- The answer and the answer key never appear in network responses before Reveal.
+- Each group sees its place for about 5 seconds, its result strip, and a full scoreboard at each round end.
+- Every input is uppercase and restricted to its input_mode.
