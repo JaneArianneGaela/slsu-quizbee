@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import type { QuizState } from "@/lib/types";
 
-export function useQuizState() {
+export function useQuizState(publicView = false) {
   const [s, setS] = useState<QuizState | null>(null);
   const [unauth, setUnauth] = useState(false);
   const offset = useRef(0);
@@ -13,7 +13,7 @@ export function useQuizState() {
   const load = useCallback(async () => {
     const t0 = Date.now();
     try {
-      const r = await fetch("/api/state", { cache: "no-store" });
+      const r = await fetch(publicView ? "/api/state?public=1" : "/api/state", { cache: "no-store" });
       const t1 = Date.now();
       if (r.status === 401) {
         setUnauth(true);
@@ -32,20 +32,20 @@ export function useQuizState() {
     } catch {
       /* keep last state, next poll retries */
     }
-  }, []);
+  }, [publicView]);
 
   useEffect(() => {
     load(); // full fetch on load / reconnect
     const poll = setInterval(load, 2000); // fallback
     const ch = supabaseBrowser
-      .channel("session-state")
+      .channel(publicView ? "session-state-public" : "session-state")
       .on("postgres_changes", { event: "*", schema: "public", table: "session_state" }, () => load())
       .subscribe();
     return () => {
       clearInterval(poll);
       supabaseBrowser.removeChannel(ch);
     };
-  }, [load]);
+  }, [load, publicView]);
 
   return { s, unauth, now, load };
 }

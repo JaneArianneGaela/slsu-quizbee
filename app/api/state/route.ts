@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import { getParticipant, isQm } from "@/lib/session";
 import { supabaseAdmin } from "@/lib/supabase/server";
 
-export async function GET() {
+export async function GET(req: Request) {
+  // ?public=1 makes the server treat the caller like a participant,
+  // so /board never receives the answer before Reveal even with the QM cookie.
+  const asPublic = new URL(req.url).searchParams.get("public") === "1";
+
   const [me, qm] = await Promise.all([getParticipant(), isQm()]);
   if (!me && !qm) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
@@ -34,7 +38,7 @@ export async function GET() {
   const order: string[] = Array.isArray(ord?.order_ids) ? (ord!.order_ids as string[]) : [];
 
   // The question is only sent while it is live or revealed.
-  // The answer is only sent at reveal (or to the QM).
+  // The answer is only sent at reveal (or to the QM, except on the public board).
   let question = null;
   if (st?.current_question_id && ["QUESTION_LIVE", "REVEALED"].includes(phase)) {
     const { data: q } = await supabaseAdmin
@@ -44,7 +48,7 @@ export async function GET() {
       .single();
     if (q) {
       const inRound = order.filter((id) => id.split("-")[0] === q.round);
-      const showAnswer = qm || phase === "REVEALED";
+      const showAnswer = (qm && !asPublic) || phase === "REVEALED";
       question = {
         id: q.id,
         round: q.round,

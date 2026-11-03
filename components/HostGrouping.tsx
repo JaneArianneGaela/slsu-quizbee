@@ -24,7 +24,7 @@ export default function HostGrouping({
   const [seq, setSeq] = useState<Seq[] | null>(null);
   const [idx, setIdx] = useState(0);
   const [spinKey, setSpinKey] = useState(0);
-  const [fast, setFast] = useState(false);
+  const [fast, setFast] = useState(false); 
 
   const load = useCallback(async () => {
     try {

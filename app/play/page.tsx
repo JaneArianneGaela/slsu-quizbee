@@ -155,7 +155,7 @@ export default function PlayPage() {
           </h1>
           <p className="mt-3 text-slate-400">
             {s.phase === "ROUND_SCOREBOARD"
-              ? "Round scoreboard coming up (built in Stage 4B)."
+              ? "Round scoreboard coming up."
               : "Waiting for the next question."}
           </p>
         </div>
