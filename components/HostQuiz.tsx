@@ -67,9 +67,7 @@ export default function HostQuiz() {
   else if (ph === "ROUND_SCOREBOARD")
     primary = !lastOverall
       ? { label: "Start Next Round", run: () => act("start") }
-      : tied.length
-      ? { label: "Start Clincher", run: () => act("start_clincher") }
-      : { label: "Finish", run: () => act("finish") };
+      : { label: tied.length ? "Finish → Final Results" : "Finish", run: () => act("finish") };
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -138,9 +136,11 @@ export default function HostQuiz() {
       )}
 
       {/* no `sound` prop: the host panel stays silent, the projector board plays the timer sounds */}
-      {q && s && <QuestionScreen s={s} now={now} small />}
+      {q && s && ["QUESTION_LIVE", "LOCKED", "REVEALED"].includes(s.phase) && (
+        <QuestionScreen s={s} now={now} small />
+      )}
 
-      {q?.correct && (
+      {q?.correct && ["QUESTION_LIVE", "LOCKED", "REVEALED"].includes(s.phase) && (
         <div className="rounded-2xl p-[6px]" style={{ background: HAZARD }}>
           <div className="rounded-xl bg-white p-4">
             <div className="inline-block rounded-full bg-[#B4232A] px-3 py-1 font-display text-sm tracking-[.18em] text-white">
@@ -158,14 +158,28 @@ export default function HostQuiz() {
 
       {q && ph === "REVEALED" && <RevealPanel r={r} questionId={q.id} myGroupId={null} showOverlay={false} />}
 
+      {ph === "REVEALED" && inClincher && (
+        <div className="space-y-3">
+          {r?.standings && <Scoreboard rows={r.standings} title="Current standings" />}
+          {tied.length > 0 && (
+            <p className="font-bold text-[#6B4700]">Still tied: Group {tied.join(", ")}.</p>
+          )}
+          <button disabled={busy} onClick={() => act("end_clincher")} className="btn-primary w-full">
+            End Clincher → Final Results
+          </button>
+        </div>
+      )}
+
       {ph === "ROUND_SCOREBOARD" && r?.standings && (
         <>
           <Scoreboard rows={r.standings} title="Round scoreboard" />
           {lastOverall && tied.length > 0 && (
             <div className="flex flex-wrap items-center gap-3 rounded-2xl border-2 border-gold bg-[#FFF3C7] p-3">
-              <p className="font-bold text-[#6B4700]">Tie for a prize position: Group {tied.join(", ")}.</p>
-              <button disabled={busy} onClick={() => act("finish")} className="min-h-11 text-sm font-bold text-royal underline disabled:opacity-50">
-                Skip clincher and finish
+              <p className="font-bold text-[#6B4700]">
+                Tie for a prize position: Group {tied.join(", ")}. A clincher is optional.
+              </p>
+              <button disabled={busy} onClick={() => act("start_clincher")} className="btn-gold">
+                Start Clincher (optional)
               </button>
             </div>
           )}
