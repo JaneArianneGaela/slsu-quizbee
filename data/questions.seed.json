@@ -94,29 +94,31 @@
     "round": "R1",
     "order_no": 6,
     "source_college": "CEN",
-    "input_mode": "IPV4",
-    "prompt": "A workstation has IPv4 address 192.168.1.10/24. What is its network address? Enter the IPv4 address only.",
+    "input_mode": "NUMBER",
+    "prompt": "A 12 V supply is connected across a single 4 Ω resistor. Using Ohm's law, what current flows through the resistor in amperes? Enter the number only.",
     "options": null,
-    "correct": "192.168.1.0",
+    "correct": "3",
     "accepted": [
-      "192.168.1.0"
+      "3",
+      "3.0"
     ],
     "tolerance": 0,
     "points": 3,
     "time_limit_s": 30,
-    "grading_rule": "Normalized exact IPv4 match."
+    "grading_rule": "Numeric exact match; unit is supplied by the question."
   },
   {
     "id": "R1-Q07",
     "round": "R1",
     "order_no": 7,
-    "source_college": "CEN",
+    "source_college": "CTE",
     "input_mode": "NUMBER",
-    "prompt": "A complete truth table contains three independent propositional variables. How many rows are required? Enter the number only.",
+    "prompt": "A student's five quiz scores are 12, 15, 18, 20, and 25. What is the mean score? Enter the number only.",
     "options": null,
-    "correct": "8",
+    "correct": "18",
     "accepted": [
-      "8"
+      "18",
+      "18.0"
     ],
     "tolerance": 0,
     "points": 3,
@@ -127,14 +129,15 @@
     "id": "R1-Q08",
     "round": "R1",
     "order_no": 8,
-    "source_college": "CEN",
+    "source_college": "CIT",
     "input_mode": "TEXT",
-    "prompt": "Which network device forwards Ethernet frames within a local area network using MAC addresses?",
+    "prompt": "Which arc welding process, commonly called \"stick welding\", uses a flux-coated consumable electrode? Give the full name or the abbreviation.",
     "options": null,
-    "correct": "SWITCH",
+    "correct": "SMAW",
     "accepted": [
-      "SWITCH",
-      "NETWORK SWITCH"
+      "SMAW",
+      "SHIELDED METAL ARC WELDING",
+      "SHIELDED METAL-ARC WELDING"
     ],
     "tolerance": 0,
     "points": 3,
@@ -145,23 +148,23 @@
     "id": "R1-Q09",
     "round": "R1",
     "order_no": 9,
-    "source_college": "CEN",
+    "source_college": "CAS",
     "input_mode": "CHOICE",
-    "prompt": "In Cisco Packet Tracer, which path opens the IPv4 configuration settings on a PC?",
+    "prompt": "Which of the following is an example of a chemical change?",
     "options": {
-      "A": "PC > Desktop > IP Configuration",
-      "B": "PC > Physical > Power Supply",
-      "C": "PC > Config > Display Settings",
-      "D": "PC > Programming > Terminal"
+      "A": "Melting of ice",
+      "B": "Rusting of iron",
+      "C": "Dissolving sugar in water",
+      "D": "Cutting a sheet of paper"
     },
-    "correct": "A",
+    "correct": "B",
     "accepted": [
-      "A"
+      "B"
     ],
     "tolerance": 0,
     "points": 3,
     "time_limit_s": 30,
-    "grading_rule": "Grade by option ID A."
+    "grading_rule": "Grade by option ID B."
   },
   {
     "id": "R1-Q10",
@@ -169,7 +172,7 @@
     "order_no": 10,
     "source_college": "CAG",
     "input_mode": "LIST",
-    "prompt": "List the three primary plant macronutrients represented by the fertilizer notation N--P--K. Give the full nutrient names or their symbols in N--P--K order, separated by commas.",
+    "prompt": "List the three primary plant macronutrients represented by the fertilizer notation N-P-K. Give the full nutrient names or their symbols in N-P-K order, separated by commas.",
     "options": null,
     "correct": "NITROGEN, PHOSPHORUS, POTASSIUM",
     "accepted": [
@@ -263,56 +266,59 @@
     "order_no": 15,
     "source_college": "CEN",
     "input_mode": "TEXT",
-    "prompt": "What is the 48-bit hardware address assigned to a network interface commonly called?",
+    "prompt": "What is the SI unit of pressure, defined as one newton per square meter?",
     "options": null,
-    "correct": "MAC ADDRESS",
+    "correct": "PASCAL",
     "accepted": [
-      "MAC ADDRESS",
-      "MAC"
+      "PASCAL",
+      "PASCALS",
+      "PA"
     ],
     "tolerance": 0,
     "points": 3,
     "time_limit_s": 30,
-    "grading_rule": "Case-insensitive exact match; accept listed alias only."
+    "grading_rule": "Case-insensitive exact match; accept listed aliases."
   },
   {
     "id": "R1-Q16",
     "round": "R1",
     "order_no": 16,
-    "source_college": "CEN",
+    "source_college": "CTE",
     "input_mode": "CHOICE",
-    "prompt": "In propositional logic, which symbol represents the AND connective?",
+    "prompt": "Which learning theorist is best known for the concept of the \"zone of proximal development\"?",
     "options": {
-      "A": "∧",
-      "B": "∨",
-      "C": "¬",
-      "D": "→"
+      "A": "Jean Piaget",
+      "B": "Lev Vygotsky",
+      "C": "B. F. Skinner",
+      "D": "Ivan Pavlov"
     },
-    "correct": "A",
+    "correct": "B",
     "accepted": [
-      "A"
+      "B"
     ],
     "tolerance": 0,
     "points": 3,
     "time_limit_s": 30,
-    "grading_rule": "Grade by option ID A; if using text input, also accept the exact symbol ∧."
+    "grading_rule": "Grade by option ID B."
   },
   {
     "id": "R1-Q17",
     "round": "R1",
     "order_no": 17,
-    "source_college": "CEN",
+    "source_college": "CIT",
     "input_mode": "TEXT",
-    "prompt": "Write the 8-bit binary representation of decimal 13. Include all eight bits.",
+    "prompt": "Name the precision instrument with a rotating thimble and ratchet stop that is used to measure small outside dimensions to 0.01 mm.",
     "options": null,
-    "correct": "00001101",
+    "correct": "MICROMETER",
     "accepted": [
-      "00001101"
+      "MICROMETER",
+      "MICROMETER CALIPER",
+      "OUTSIDE MICROMETER"
     ],
     "tolerance": 0,
     "points": 3,
     "time_limit_s": 30,
-    "grading_rule": "Exact text match; leading zeroes are required."
+    "grading_rule": "Case-insensitive exact match; accept listed aliases."
   },
   {
     "id": "R1-Q18",
@@ -428,18 +434,18 @@
     "round": "R2",
     "order_no": 4,
     "source_college": "CEN",
-    "input_mode": "TEXT",
-    "prompt": "Convert binary 101110₂ to octal. Give the octal digits only.",
+    "input_mode": "NUMBER",
+    "prompt": "A simply supported beam with a span of 8 m carries a uniformly distributed load of 10 kN/m. Using M = wL²/8, what is the maximum bending moment in kN·m? Enter the number only.",
     "options": null,
-    "correct": "56",
+    "correct": "80",
     "accepted": [
-      "56",
-      "56₈"
+      "80",
+      "80.0"
     ],
     "tolerance": 0,
     "points": 5,
     "time_limit_s": 60,
-    "grading_rule": "Normalize by removing an optional base subscript, then exact match."
+    "grading_rule": "Numeric exact match; unit is supplied by the question."
   },
   {
     "id": "R2-Q05",
@@ -497,36 +503,35 @@
     "round": "R2",
     "order_no": 8,
     "source_college": "CEN",
-    "input_mode": "TEXT",
-    "prompt": "Convert hexadecimal 3AF to octal. Give the octal digits only, without a base subscript.",
+    "input_mode": "NUMBER",
+    "prompt": "Three resistors of 6 Ω, 12 Ω, and 4 Ω are connected in parallel. What is the equivalent resistance in ohms? Enter the number only.",
     "options": null,
-    "correct": "1657",
+    "correct": "2",
     "accepted": [
-      "1657",
-      "1657₈"
+      "2",
+      "2.0"
     ],
     "tolerance": 0,
     "points": 5,
     "time_limit_s": 60,
-    "grading_rule": "Normalize by removing an optional base subscript, then exact match."
+    "grading_rule": "Numeric exact match; unit is supplied by the question."
   },
   {
     "id": "R2-Q09",
     "round": "R2",
     "order_no": 9,
-    "source_college": "CEN",
-    "input_mode": "TEXT",
-    "prompt": "Add the binary numbers 1101₂ and 1011₂. Give the result in binary, without a base subscript.",
+    "source_college": "CIT",
+    "input_mode": "NUMBER",
+    "prompt": "A lathe turns a workpiece 50 mm in diameter at a cutting speed of 30 m/min. Using N = 1000V/(πD) with π = 3.1416, what spindle speed in rpm is required? Round to the nearest whole number and enter the number only.",
     "options": null,
-    "correct": "11000",
+    "correct": "191",
     "accepted": [
-      "11000",
-      "11000₂"
+      "191"
     ],
-    "tolerance": 0,
+    "tolerance": 0.5,
     "points": 5,
     "time_limit_s": 60,
-    "grading_rule": "Normalize by removing an optional base subscript, then exact match."
+    "grading_rule": "Accept a numeric value within ±0.5 of 191."
   },
   {
     "id": "R2-Q10",
@@ -567,18 +572,18 @@
     "id": "R2-Q12",
     "round": "R2",
     "order_no": 12,
-    "source_college": "CEN",
-    "input_mode": "IPV4",
-    "prompt": "A host has IPv4 address 192.168.10.70/26. Determine its network address. Enter the IPv4 address only.",
+    "source_college": "CAG",
+    "input_mode": "NUMBER",
+    "prompt": "A 3-hectare rice field yields 4.2 tons per hectare. If the harvest is packed in 50-kg sacks, how many sacks are produced? (1 ton = 1,000 kg.) Enter the whole number only.",
     "options": null,
-    "correct": "192.168.10.64",
+    "correct": "252",
     "accepted": [
-      "192.168.10.64"
+      "252"
     ],
     "tolerance": 0,
     "points": 5,
     "time_limit_s": 60,
-    "grading_rule": "Normalized exact IPv4 match."
+    "grading_rule": "Numeric exact match."
   },
   {
     "id": "R2-Q13",
@@ -602,18 +607,19 @@
     "id": "R2-Q14",
     "round": "R2",
     "order_no": 14,
-    "source_college": "CEN",
+    "source_college": "CTE",
     "input_mode": "TEXT",
-    "prompt": "Which Cisco IOS command displays router interface names, IPv4 addresses, and interface status in a compact list?",
+    "prompt": "What type of assessment is conducted during instruction to monitor student learning and provide ongoing feedback, rather than to assign a final grade?",
     "options": null,
-    "correct": "SHOW IP INTERFACE BRIEF",
+    "correct": "FORMATIVE ASSESSMENT",
     "accepted": [
-      "SHOW IP INTERFACE BRIEF"
+      "FORMATIVE ASSESSMENT",
+      "FORMATIVE"
     ],
     "tolerance": 0,
     "points": 5,
     "time_limit_s": 60,
-    "grading_rule": "Case-insensitive exact command match; collapse repeated spaces."
+    "grading_rule": "Case-insensitive exact match; accept listed short form."
   },
   {
     "id": "R2-Q15",
@@ -621,7 +627,7 @@
     "order_no": 15,
     "source_college": "CAS",
     "input_mode": "LIST",
-    "prompt": "Solve x^3^ + 10x^2^ + 11x - 70 = 0. Enter both real roots separated by a comma; either order is accepted.",
+    "prompt": "Solve x³ + 10x² + 11x − 70 = 0. Enter all three real roots separated by commas; any order is accepted.",
     "options": null,
     "correct": "2, -5, -7",
     "accepted": [
@@ -631,11 +637,13 @@
       "-5,2,-7",
       "-5,-7,2",
       "-7,2,-5",
+      "-7,-5,2",
       "X=2,X=-5,X=-7",
       "X=2,X=-7,X=-5",
       "X=-5,X=2,X=-7",
       "X=-5,X=-7,X=2",
-      "X=-7,X=2,X=-5"
+      "X=-7,X=2,X=-5",
+      "X=-7,X=-5,X=2"
     ],
     "tolerance": 0,
     "points": 5,
@@ -716,7 +724,7 @@
     "order_no": 5,
     "source_college": "CAS",
     "input_mode": "NUMBER",
-    "prompt": "A recessive phenotype has frequency q² = 0.04 in a population at Hardy--Weinberg equilibrium. What percentage of the population is expected to be heterozygous (2pq)? Enter a whole-number percentage without the percent sign.",
+    "prompt": "A recessive phenotype has frequency q² = 0.04 in a population at Hardy–Weinberg equilibrium. What percentage of the population is expected to be heterozygous (2pq)? Enter a whole-number percentage without the percent sign.",
     "options": null,
     "correct": "32",
     "accepted": [
@@ -751,40 +759,40 @@
     "round": "R3",
     "order_no": 7,
     "source_college": "CEN",
-    "input_mode": "TEXT",
-    "prompt": "Subtract 11011₂ from 101101₂. Give the result in binary digits only.",
+    "input_mode": "NUMBER",
+    "prompt": "A steel rod 2.0 m long with a cross-sectional area of 500 mm² carries an axial tensile load of 60 kN. If E = 200 GPa, what is its elongation in millimeters? Enter the number only.",
     "options": null,
-    "correct": "10010",
+    "correct": "1.2",
     "accepted": [
-      "10010",
-      "10010₂"
+      "1.2",
+      "1.20"
     ],
-    "tolerance": 0,
+    "tolerance": 0.005,
     "points": 8,
     "time_limit_s": 120,
-    "grading_rule": "Normalize by removing an optional base subscript, then exact match."
+    "grading_rule": "Accept a numeric value within ±0.005 of 1.2; unit is supplied by the question."
   },
   {
     "id": "R3-Q08",
     "round": "R3",
     "order_no": 8,
-    "source_college": "CEN",
+    "source_college": "CTE",
     "input_mode": "CHOICE",
-    "prompt": "A router must reach 192.168.2.0/24 through next-hop address 10.0.0.2. Which Cisco IOS command correctly creates the static route?",
+    "prompt": "Under Bloom's revised taxonomy, a teacher asks students to design an original experiment to test a hypothesis. Which cognitive level does this task primarily target?",
     "options": {
-      "A": "ip route 192.168.2.0 255.255.255.0 10.0.0.2",
-      "B": "ip route 10.0.0.2 255.255.255.0 192.168.2.0",
-      "C": "ip address 192.168.2.0 255.255.255.0 10.0.0.2",
-      "D": "show ip route 192.168.2.0"
+      "A": "Remembering",
+      "B": "Understanding",
+      "C": "Analyzing",
+      "D": "Creating"
     },
-    "correct": "A",
+    "correct": "D",
     "accepted": [
-      "A"
+      "D"
     ],
     "tolerance": 0,
     "points": 8,
     "time_limit_s": 120,
-    "grading_rule": "Grade by option ID A."
+    "grading_rule": "Grade by option ID D."
   },
   {
     "id": "R3-Q09",
@@ -825,17 +833,18 @@
     "round": "CL",
     "order_no": 1,
     "source_college": "CEN",
-    "input_mode": "IPV4",
-    "prompt": "A device has IPv4 address 192.168.5.77/28. What is the network address? Enter the IPv4 address only.",
+    "input_mode": "NUMBER",
+    "prompt": "Water flows through a pipe with a cross-sectional area of 0.05 m² at a mean velocity of 2 m/s. What is the volumetric flow rate in liters per second? (1 m³ = 1,000 L.) Enter the number only.",
     "options": null,
-    "correct": "192.168.5.64",
+    "correct": "100",
     "accepted": [
-      "192.168.5.64"
+      "100",
+      "100.0"
     ],
     "tolerance": 0,
     "points": 0,
     "time_limit_s": 60,
-    "grading_rule": "Normalized exact IPv4 match."
+    "grading_rule": "Numeric exact match; unit is supplied by the question."
   },
   {
     "id": "CL-Q02",
