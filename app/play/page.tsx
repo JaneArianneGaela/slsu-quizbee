@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import Wheel from "@/components/Wheel";
+import { useEffect, useState } from "react";
 import QuestionScreen from "@/components/QuestionScreen";
 import AnswerBox from "@/components/AnswerBox";
 import RevealPanel from "@/components/RevealPanel";
@@ -45,28 +44,10 @@ export default function PlayPage() {
   const { r, reload } = useResults(s);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [intro, setIntro] = useState(false);
-  const [spinKey, setSpinKey] = useState(0);
-  const checked = useRef<string | null>(null);
 
   useEffect(() => {
     if (unauth) window.location.href = "/register";
   }, [unauth]);
-
-  // play the personal wheel once per spin
-  useEffect(() => {
-    if (!s?.me?.groupId || !s.spinAt || !["ROLES", "LOBBY"].includes(s.phase)) return;
-    if (checked.current === s.spinAt) return;
-    checked.current = s.spinAt;
-    if (sessionStorage.getItem(`spun:${s.spinAt}`)) return;
-    setIntro(true);
-    setSpinKey(1);
-  }, [s]);
-
-  function endIntro() {
-    if (s?.spinAt) sessionStorage.setItem(`spun:${s.spinAt}`, "1");
-    setIntro(false);
-  }
 
   async function chooseRole(role: "VIEWER" | "ANSWERER") {
     setError("");
@@ -151,36 +132,12 @@ export default function PlayPage() {
           <p className="mt-3 text-lg font-medium text-navy md:text-xl">
             {s.phase === "REGISTRATION"
               ? "You're registered. Waiting for the Quiz Master to close registration..."
-              : "Registration is closed. Waiting for the Quiz Master to spin the wheel..."}
+              : "Registration is closed. Waiting for the Quiz Master to assign groups..."}
           </p>
           <div className="mt-6 inline-flex animate-pulse items-center gap-2 rounded-full bg-ice px-5 py-2 font-display text-lg tracking-widest text-royal">
             <span className="inline-block h-2.5 w-2.5 rounded-full bg-danger" aria-hidden />
             {s.registered} registered so far
           </div>
-        </div>
-      </Shell>
-    );
-  }
-
-  if (intro && me.groupId) {
-    return (
-      <Shell>
-        <div className="my-auto flex flex-col items-center gap-7">
-          <h1 className="text-center font-display text-3xl uppercase tracking-wide text-navy-deep md:text-4xl">
-            Spinning for {me.fullName}...
-          </h1>
-          <Wheel target={me.groupId} spinKey={spinKey} durationMs={4000} size={320} />
-          <div className="text-center" style={{ opacity: 0, animation: "fadeIn .5s ease forwards", animationDelay: "4s" }}>
-            <div className="font-display text-6xl uppercase tracking-[.08em] text-navy-deep">
-              <span className="hl">GROUP {me.groupId}</span>
-            </div>
-            <button onClick={endIntro} className="btn-primary mt-5 w-full">
-              Continue
-            </button>
-          </div>
-          <button onClick={endIntro} className="min-h-11 px-4 text-base font-bold text-mute underline">
-            Skip
-          </button>
         </div>
       </Shell>
     );
@@ -253,7 +210,7 @@ export default function PlayPage() {
         <section className="glass space-y-4">
           <h2 className="font-display text-3xl uppercase tracking-wide text-navy-deep">Choose your role</h2>
           <p className="text-base font-medium text-navy">
-            Each group has exactly one Answerer, the only person who types the group&apos;s answer. Everyone else is a
+            Each group has exactly one Answerer, the only person who types the group's answer. Everyone else is a
             Viewer and answers by speaking in Google Meet.
           </p>
           <div className="grid gap-4 md:grid-cols-2">

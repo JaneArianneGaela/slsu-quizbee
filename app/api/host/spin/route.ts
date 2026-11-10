@@ -18,13 +18,13 @@ export async function POST() {
 
   const { data: st } = await supabaseAdmin.from("session_state").select("phase").eq("id", 1).single();
   if (!st || !["GROUPING", "ROLES"].includes(st.phase)) {
-    return NextResponse.json({ error: "Close registration first, then spin." }, { status: 409 });
+    return NextResponse.json({ error: "Close registration first, then assign groups." }, { status: 409 });
   }
 
   const { data: people } = await supabaseAdmin.from("participants").select("id, full_name, college");
   if (!people?.length) return NextResponse.json({ error: "No participants registered." }, { status: 400 });
 
-  // clear any previous draw
+  // clear any previous group assignment
   const clear = await supabaseAdmin
     .from("participants")
     .update({ group_id: null, role: null })
@@ -55,7 +55,7 @@ export async function POST() {
     )
   );
   if (results.some((r) => r.error)) {
-    return NextResponse.json({ error: "Saving the draw failed. Press Spin again." }, { status: 500 });
+    return NextResponse.json({ error: "Saving group assignments failed. Try again." }, { status: 500 });
   }
 
   await supabaseAdmin
@@ -63,7 +63,5 @@ export async function POST() {
     .update({ phase: "ROLES", spin_at: new Date().toISOString(), updated_at: new Date().toISOString() })
     .eq("id", 1);
 
-  // random reveal order for the wheel animation
-  const sequence = shuffle(assignments).map(({ name, college, group_id }) => ({ name, college, group_id }));
-  return NextResponse.json({ sequence });
+  return NextResponse.json({ success: true });
 }
