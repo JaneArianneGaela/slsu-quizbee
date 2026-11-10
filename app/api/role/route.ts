@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
   if (error) {
     if (error.code === "23505") {
-      return NextResponse.json({ error: "Your group already has an Answerer." }, { status: 409 });
+      return NextResponse.json({ error: "Your group already has a Representative." }, { status: 409 });
     }
     return NextResponse.json({ error: "Could not save your role." }, { status: 500 });
   }

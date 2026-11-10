@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { randomInt, randomUUID } from "node:crypto";
 import { z } from "zod";
 import { supabaseAdmin } from "@/lib/supabase/server";
-import { COLLEGES } from "@/lib/constants";
+import { COLLEGES, officialGroupFor } from "@/lib/constants";
 import { signToken, sha256, hashPin, newDeviceToken, cookieOpts } from "@/lib/auth";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 
@@ -15,6 +15,8 @@ const Body = z.object({
     .max(80, "Name is too long.")
     .transform((s) => s.replace(/\s+/g, " ")),
   college: z.enum(COLLEGES, { message: "Choose your college." }),
+  groupId: z.number().int().min(1).max(7),
+  role: z.enum(["VIEWER", "ANSWERER"]),
 });
 
 const TTL = 60 * 60 * 24 * 3;
@@ -27,7 +29,14 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid input." }, { status: 400 });
   }
-  const { fullName, college } = parsed.data;
+  const { fullName, college, groupId, role } = parsed.data;
+  const officialGroup = officialGroupFor(fullName, college);
+  if (!officialGroup) {
+    return NextResponse.json({ error: "Your name and department are not on the announced participant roster." }, { status: 403 });
+  }
+  if (groupId !== officialGroup) {
+    return NextResponse.json({ error: `Your announced group is Group ${officialGroup}.` }, { status: 400 });
+  }
 
   const { data: st } = await supabaseAdmin
     .from("session_state")
@@ -52,10 +61,15 @@ export async function POST(req: Request) {
     id,
     full_name: fullName,
     college,
+    group_id: groupId,
+    role,
     pin_hash: hashPin(id, pin),
     device_token_hash: sha256(dev),
   });
   if (error) {
+    if (error.code === "23505" && error.message.includes("one_answerer_per_group")) {
+      return NextResponse.json({ error: "That group already has a Representative." }, { status: 409 });
+    }
     if (error.code === "23505") {
       return NextResponse.json(
         { error: "That name is already registered for this college. If it's you, use Rejoin." },

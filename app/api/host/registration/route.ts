@@ -20,21 +20,8 @@ export async function POST(req: Request) {
 
   const { open } = parsed.data;
 
-  // Closing is only allowed from REGISTRATION or GROUPING.
   if (!open && !["REGISTRATION", "GROUPING"].includes(st.phase)) {
     return NextResponse.json({ error: "Registration is already closed." }, { status: 409 });
-  }
-
-  // Reopening after the wheel was spun: wipe groups and roles so everyone is re-spun together.
-  if (open && ["ROLES", "LOBBY"].includes(st.phase)) {
-    const { error: clearErr } = await supabaseAdmin
-      .from("participants")
-      .update({ group_id: null, role: null })
-      .not("id", "is", null);
-    if (clearErr) return NextResponse.json({ error: "Could not clear the groups." }, { status: 500 });
-
-    // Clear the spin marker so players see the wheel again on the next spin.
-    await supabaseAdmin.from("session_state").update({ spin_at: null }).eq("id", 1);
   }
 
   // Phase guard makes this atomic against a double-click.
@@ -42,7 +29,7 @@ export async function POST(req: Request) {
     .from("session_state")
     .update({
       registration_open: open,
-      phase: open ? "REGISTRATION" : "GROUPING",
+      phase: open ? "REGISTRATION" : "ROLES",
       updated_at: new Date().toISOString(),
     })
     .eq("id", 1)

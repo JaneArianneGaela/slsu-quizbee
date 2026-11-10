@@ -13,13 +13,13 @@ export type Question = {
   timeLimitS: number;
   correct?: string;     // only present at reveal (or for the QM)
   accepted?: string[];
+  explanation?: string | null;
 };
 
 export type QuizState = {
   phase: string;
   effectivePhase: string;
   registrationOpen: boolean;
-  spinAt: string | null;
   registered: number;
   isQm: boolean;
   me: {
@@ -36,6 +36,7 @@ export type QuizState = {
   pausedRemainingMs: number | null;
   question: Question | null;
   clincherGroups: number[] | null;
+  clincherQuestionsRemaining: number | null;
   index: number;
   totalQuestions: number;
 };

@@ -10,6 +10,7 @@ type BrandHeaderProps = {
   className?: string;
   /** Slim strip for projector/board screens */
   compact?: boolean;
+  music?: boolean;
   /** Show the "Officers" button (default true) */
   officers?: boolean;
   /** Right-side slot (e.g. extra buttons) */
@@ -22,6 +23,7 @@ export function BrandHeader({
   subtitle = "DOST Scholars’ Alliance · A.Y. 2026–2027",
   className = "",
   compact = false,
+  music = compact,
   officers = true,
   children,
 }: BrandHeaderProps) {
@@ -51,7 +53,7 @@ export function BrandHeader({
 
       <div className={`flex items-center gap-1.5 ${live ? "" : "ml-auto"}`}>
         {officers && <OfficersButton compact={compact} />}
-        <SoundControls music={compact} />
+        <SoundControls music={music} />
         {children}
       </div>
     </header>

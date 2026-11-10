@@ -7,7 +7,7 @@ import { COLLEGES } from "@/lib/constants";
 type P = { id: string; full_name: string; college: string; group_id: number | null; role: string | null };
 type Roster = { participants: P[]; registration_open: boolean; max_participants: number; phase: string };
 
-const TARGET: Record<string, number> = { CEN: 14, CAS: 6, CAG: 5, CIT: 3, CTE: 2 };
+const TARGET: Record<string, number> = { CEN: 16, CAS: 7, CAG: 3, CIT: 0, CTE: 2 };
 const input =
   "min-h-11 rounded-xl border-2 border-royal/30 bg-white px-3 py-2 text-navy outline-none focus:border-royal focus:ring-4 focus:ring-sky-300/40";
 
@@ -105,7 +105,7 @@ export default function HostPage() {
       <main className="flex min-h-dvh items-center justify-center p-6 text-navy">
         <form onSubmit={login} className="glass w-full max-w-sm space-y-4" style={{ animation: "up .5s ease backwards" }}>
           <p className="eyebrow">Restricted</p>
-          <h1 className="font-display text-4xl uppercase tracking-wide text-navy-deep">Quiz Master Login</h1>
+          <h1 className="font-display text-4xl uppercase tracking-wide text-navy-deep">Admin Host Login</h1>
           <input
             type="password"
             autoFocus
@@ -136,7 +136,7 @@ export default function HostPage() {
         <div>
           <p className="eyebrow">Control room</p>
           <h1 className="font-display text-4xl uppercase tracking-wide text-navy-deep md:text-5xl">
-            Quiz Master Console
+            Admin Host Dashboard
           </h1>
           <p className="mt-1 font-semibold text-mute">
             Phase:{" "}
@@ -162,7 +162,7 @@ export default function HostPage() {
       <HostGrouping
         phase={roster?.phase ?? ""}
         total={list.length}
-        max={roster?.max_participants ?? 30}
+        max={roster?.max_participants ?? 28}
         onChange={load}
       />
       <HostQuiz />

@@ -70,21 +70,37 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="grid gap-3.5 md:grid-cols-2">
-              <Link href="/host" className={cardCls}>
+            <div className="grid gap-3.5 sm:grid-cols-2">
+              <Link href="/register?role=ANSWERER" className={cardCls}>
                 <div className={icoCls}>⚙️</div>
                 <h2 className="mb-0.5 mt-2 font-display text-[1.7rem] font-normal uppercase tracking-[.05em]">
-                  Quiz Master
+                  Representative
                 </h2>
-                <p className="text-[.95rem] text-mute">Run rounds, timer and reveals.</p>
+                <p className="text-[.95rem] text-mute">Sign in and submit answers for your group.</p>
                 <span aria-hidden="true" className={arrowCls}>→</span>
               </Link>
-              <Link href="/register" className={cardCls}>
+              <Link href="/register?role=VIEWER" className={cardCls}>
                 <div className={icoCls}>🧪</div>
                 <h2 className="mb-0.5 mt-2 font-display text-[1.7rem] font-normal uppercase tracking-[.05em]">
-                  Participant
+                  Members
                 </h2>
-                <p className="text-[.95rem] text-mute">Register, join your group, answer.</p>
+                <p className="text-[.95rem] text-mute">Sign in to follow your group’s quiz.</p>
+                <span aria-hidden="true" className={arrowCls}>→</span>
+              </Link>
+              <Link href="/board" className={cardCls}>
+                <div className={icoCls}>👀</div>
+                <h2 className="mb-0.5 mt-2 font-display text-[1.7rem] font-normal uppercase tracking-[.05em]">
+                  Audience
+                </h2>
+                <p className="text-[.95rem] text-mute">Watch questions and revealed answers.</p>
+                <span aria-hidden="true" className={arrowCls}>→</span>
+              </Link>
+              <Link href="/host" className={cardCls}>
+                <div className={icoCls}>🔐</div>
+                <h2 className="mb-0.5 mt-2 font-display text-[1.7rem] font-normal uppercase tracking-[.05em]">
+                  Admin (Host)
+                </h2>
+                <p className="text-[.95rem] text-mute">Restricted quiz dashboard.</p>
                 <span aria-hidden="true" className={arrowCls}>→</span>
               </Link>
             </div>

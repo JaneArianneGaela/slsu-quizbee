@@ -11,7 +11,7 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: "Invalid phase." }, { status: 400 });
 
   const { data: st } = await supabaseAdmin.from("session_state").select("phase").eq("id", 1).single();
-  if (st?.phase !== "ROLES") return NextResponse.json({ error: "Spin the wheel first." }, { status: 409 });
+  if (st?.phase !== "ROLES") return NextResponse.json({ error: "Close registration first." }, { status: 409 });
 
   await supabaseAdmin
     .from("session_state")

@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   if (!p?.group_id) return NextResponse.json({ error: "Participant has no group." }, { status: 409 });
 
   if (role === "ANSWERER") {
-    // demote the current Answerer of that group first
+    // Demote the current Representative of that group first.
     await supabaseAdmin
       .from("participants")
       .update({ role: "VIEWER" })

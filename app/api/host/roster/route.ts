@@ -14,7 +14,7 @@ export async function GET() {
   return NextResponse.json({
     participants: participants ?? [],
     registration_open: state?.registration_open ?? true,
-    max_participants: state?.max_participants ?? 30,
+    max_participants: state?.max_participants ?? 28,
     phase: state?.phase ?? "REGISTRATION",
   });
 }
