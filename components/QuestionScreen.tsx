@@ -78,7 +78,7 @@ export default function QuestionScreen({
     if (secs > 0) seenTime.current = true;
     if (!seenTime.current) return;
     if (secs === 0) sfx.buzz();
-    else if (secs <= 10) sfx.beep();
+    else if (secs <= 10) sfx.countdown(secs);
     else if (secs % 5 === 0) sfx.tick();
   }, [secs, sound, revealed, paused]);
 
@@ -95,7 +95,7 @@ export default function QuestionScreen({
         <span className="chip chip-round">
           {ROUND_LABEL[q.round] ?? q.round} · QUESTION {q.number}/{q.totalInRound}
         </span>
-        <span className="chip chip-pts">{q.points} PTS</span>
+        <span className="chip chip-pts">{q.round === "CL" ? "TIEBREAKER" : `${q.points} PTS`}</span>
         {badge && <span className="chip">{badge}</span>}
       </div>
 
@@ -143,7 +143,7 @@ export default function QuestionScreen({
       )}
       {!revealed && !paused && ms === 0 && (
         <div className="font-display text-2xl uppercase tracking-[.1em] text-danger md:text-3xl">
-          TIME&apos;S UP — waiting for the Quiz Master
+          TIME&apos;S UP — waiting for the host
         </div>
       )}
 
@@ -196,6 +196,11 @@ export default function QuestionScreen({
           <div className="font-display text-5xl font-normal uppercase tracking-[.06em] text-navy md:text-7xl">
             {q.correct}
           </div>
+          {q.explanation && (
+            <p className="mt-3 max-w-3xl text-left text-base font-semibold leading-relaxed text-navy md:text-lg">
+              {q.explanation}
+            </p>
+          )}
         </div>
       )}
     </div>

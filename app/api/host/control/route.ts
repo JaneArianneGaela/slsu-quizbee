@@ -136,6 +136,7 @@ export async function POST(req: Request) {
       if (st.phase !== "ROUND_SCOREBOARD") return fail("Finish from the round scoreboard.");
       const order = await getOrder();
       if (st.current_index + 1 < order.length) return fail("There are still rounds to play.");
+      if (firstTie(await getStandings()).length) return fail("Resolve the tie with a clincher before finishing.");
       return move({ phase: "FINAL" });
     }
 
@@ -156,11 +157,24 @@ export async function POST(req: Request) {
       const newOrder = [...order, next];
       const { error } = await supabaseAdmin.from("quiz_order").upsert({ id: 1, order_ids: newOrder });
       if (error) return fail("Could not save the clincher order.", 500);
-      return startAt(newOrder, newOrder.length - 1, { clincher_groups: tied });
+      return startAt(newOrder, newOrder.length - 1, {
+        clincher_groups: tied,
+        clincher_winner_group_id: null,
+      });
     }
 
     case "end_clincher": {
       if (st.phase !== "REVEALED" || st.current_round !== "CL") return fail("Not in a clincher.");
+      const tied = firstTie(await getStandings());
+      if (tied.length) {
+        const order = await getOrder();
+        const { data: clinchers } = await supabaseAdmin
+          .from("questions")
+          .select("id")
+          .eq("round", "CL");
+        const hasMoreQuestions = (clinchers ?? []).some((q) => !order.includes(q.id));
+        if (hasMoreQuestions) return fail("Continue the clincher until a group answers correctly.");
+      }
       return move({ phase: "FINAL" });
     }
 
@@ -181,6 +195,7 @@ export async function POST(req: Request) {
           revealed: false,
           updated_at: iso(now),
           clincher_groups: null,
+          clincher_winner_group_id: null,
         })
         .eq("id", 1);
       if (error) return fail("Reset failed.", 500);

@@ -34,3 +34,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Quiz Bee setup
+
+Apply the SQL migrations in `supabase/migrations` in order, including
+`004_question_explanation.sql`, `005_official_groups.sql`, and
+`006_clincher_first_correct.sql`, before running `npm run seed`. The seed
+script loads each question's answer explanation along with its answer key.
+The official setup has seven groups and 28 participants; registration checks
+names, departments, and group assignments against the announced roster.
+Clincher answers use the first correct submission as the tiebreaker.
+
+Participants select their pre-announced group and sign in as a Representative
+or Member. The public audience board is available at `/board`; the host console
+at `/host` remains password protected.

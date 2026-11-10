@@ -57,9 +57,12 @@ export default function HostQuiz() {
   if (ph === "LOBBY") primary = { label: "Start Question 1", run: () => act("start") };
   else if (live) primary = { label: "Reveal Answer", run: reveal };
   else if (ph === "REVEALED" && inClincher)
-    primary = tied.length
+    primary = tied.length && (s?.clincherQuestionsRemaining ?? 0) > 0
       ? { label: "Next Clincher Question", run: () => act("start_clincher") }
-      : { label: "End Clincher → Final Podium", run: () => act("end_clincher") };
+      : {
+          label: tied.length ? "Finish — Clincher Questions Exhausted" : "Finish → Final Podium",
+          run: () => act("end_clincher"),
+        };
   else if (ph === "REVEALED")
     primary = lastOfRound
       ? { label: "Show Round Scoreboard", run: () => act("scoreboard") }
@@ -67,7 +70,9 @@ export default function HostQuiz() {
   else if (ph === "ROUND_SCOREBOARD")
     primary = !lastOverall
       ? { label: "Start Next Round", run: () => act("start") }
-      : { label: tied.length ? "Finish → Final Results" : "Finish", run: () => act("finish") };
+      : tied.length
+        ? { label: "Start Clincher", run: () => act("start_clincher") }
+        : { label: "Finish", run: () => act("finish") };
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -144,7 +149,7 @@ export default function HostQuiz() {
         <div className="rounded-2xl p-[6px]" style={{ background: HAZARD }}>
           <div className="rounded-xl bg-white p-4">
             <div className="inline-block rounded-full bg-[#B4232A] px-3 py-1 font-display text-sm tracking-[.18em] text-white">
-              QM ONLY. Do not share this screen.
+              HOST ONLY. Do not share this screen.
             </div>
             <div className="mt-2 font-display text-4xl uppercase tracking-wide text-navy-deep md:text-5xl">
               {q.correct}
@@ -162,37 +167,29 @@ export default function HostQuiz() {
         <div className="space-y-3">
           {r?.standings && <Scoreboard rows={r.standings} title="Current standings" />}
           {tied.length > 0 && (
-            <p className="font-bold text-[#6B4700]">Still tied: Group {tied.join(", ")}.</p>
+            <p className="font-bold text-[#6B4700]">
+              {s?.clincherQuestionsRemaining
+                ? `Still tied: Group ${tied.join(", ")}. The next group to answer correctly wins.`
+                : `Still tied: Group ${tied.join(", ")}. No clincher questions remain.`}
+            </p>
           )}
-          <button disabled={busy} onClick={() => act("end_clincher")} className="btn-primary w-full">
-            End Clincher → Final Results
-          </button>
         </div>
       )}
 
       {ph === "ROUND_SCOREBOARD" && r?.standings && (
-        <>
-          <Scoreboard rows={r.standings} title="Round scoreboard" />
-          {lastOverall && tied.length > 0 && (
-            <div className="flex flex-wrap items-center gap-3 rounded-2xl border-2 border-gold bg-[#FFF3C7] p-3">
-              <p className="font-bold text-[#6B4700]">
-                Tie for a prize position: Group {tied.join(", ")}. A clincher is optional.
-              </p>
-              <button disabled={busy} onClick={() => act("start_clincher")} className="btn-gold">
-                Start Clincher (optional)
-              </button>
-            </div>
-          )}
-        </>
+        <Scoreboard rows={r.standings} title="Round scoreboard" />
       )}
       {ph === "FINAL" && r?.standings && (
         <>
           <Podium rows={r.standings} />
           <Scoreboard rows={r.standings} title="Final standings" />
-          {tied.length > 0 && (
+          {tied.length > 0 && (s?.clincherQuestionsRemaining ?? 0) > 0 && (
             <button disabled={busy} onClick={() => act("start_clincher")} className="btn-gold">
-              Still tied (Group {tied.join(", ")}): Start Clincher
+              Still tied (Group {tied.join(", ")}): Start another clincher
             </button>
+          )}
+          {tied.length > 0 && (s?.clincherQuestionsRemaining ?? 0) === 0 && (
+            <p className="font-bold text-[#6B4700]">Clincher questions are exhausted; the tie remains unresolved.</p>
           )}
         </>
       )}

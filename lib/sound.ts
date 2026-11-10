@@ -74,10 +74,19 @@ export const sfx = {
   start:   () => { riser(0.8, 0.18); kick(70, 25, 0.5, 0.7, 0.75); tone(784, 0.3, "triangle", 0.18, 0.75); },
   tick:    () => { tone(1800, 0.03, "square", 0.07); kick(160, 60, 0.1, 0.25); },
   beep:    () => { tone(990, 0.18, "square", 0.14); tone(1320, 0.18, "sawtooth", 0.05); kick(100, 40, 0.2, 0.35); },
+  countdown: (secondsLeft: number) => {
+    const urgency = 11 - secondsLeft;
+    const frequency = 620 + urgency * 75;
+    const volume = Math.min(0.26, 0.09 + urgency * 0.016);
+    tone(frequency, secondsLeft <= 3 ? 0.16 : 0.1, "square", volume);
+    if (secondsLeft <= 3) {
+      tone(frequency * 1.35, 0.12, "triangle", volume * 0.65, 0.12);
+      kick(120 + urgency * 8, 40, 0.14, volume * 1.5, 0.12);
+    }
+  },
   buzz:    () => { saw(110, 0.9, 0.5); tone(82, 0.9, "square", 0.2, 0, 60); noise(0.6, 0.2, 0, 100, 3000); kick(90, 30, 0.7, 0.7); },
   lock:    () => { kick(90, 30, 0.45, 0.7); noise(0.12, 0.2, 0, 1500, 8000); tone(900, 0.3, "triangle", 0.2, 0.1); },
   whoosh:  () => { riser(0.9, 0.2); kick(70, 25, 0.6, 0.5, 0.8); },
-  spinTick:() => { tone(1300, 0.04, "square", 0.14, 0, 700); noise(0.05, 0.08, 0, 2500, 6000); },
   correct: () => {
     kick(80, 28, 0.7, 0.8);
     [523, 659, 784, 1047, 1319].forEach((f, i) => { tone(f, 0.9, "triangle", 0.2, i * 0.07); saw(f, 0.7, 0.08, i * 0.07); });

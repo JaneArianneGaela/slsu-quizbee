@@ -1,12 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import QuestionScreen from "@/components/QuestionScreen";
 import AnswerBox from "@/components/AnswerBox";
 import RevealPanel from "@/components/RevealPanel";
 import { Scoreboard, Podium } from "@/components/Scoreboard";
+import MechanicsButton from "@/components/MechanicsButton";
 import { useResults } from "@/lib/useResults";
 import { useQuizState } from "@/lib/useQuizState";
-import { sfx } from "@/lib/sound";
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
@@ -18,6 +19,9 @@ function Shell({ children }: { children: React.ReactNode }) {
         paddingBottom: "max(1.25rem, env(safe-area-inset-bottom, 0px))",
       }}
     >
+      <div className="flex justify-end">
+        <MechanicsButton />
+      </div>
       {children}
     </main>
   );
@@ -40,34 +44,25 @@ function CollegeBadge({ college }: { college: string }) {
 }
 
 export default function PlayPage() {
-  const { s, unauth, now, load } = useQuizState();
+  const router = useRouter();
+  const { s, unauth, now } = useQuizState();
   const { r, reload } = useResults(s);
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (unauth) window.location.href = "/register";
-  }, [unauth]);
+    if (unauth) router.replace("/");
+  }, [unauth, router]);
 
-  async function chooseRole(role: "VIEWER" | "ANSWERER") {
-    setError("");
-    setBusy(true);
-    try {
-      const res = await fetch("/api/role", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role }),
-      });
-      const d = await res.json().catch(() => ({}));
-      if (!res.ok) setError(d.error ?? "Could not save your role.");
-      else sfx.select();
-    } catch {
-      setError("Network error. Try again.");
-    } finally {
-      setBusy(false);
-      load();
-    }
-  }
+  useEffect(() => {
+    const preventClipboard = (event: ClipboardEvent) => event.preventDefault();
+    window.addEventListener("copy", preventClipboard);
+    window.addEventListener("cut", preventClipboard);
+    window.addEventListener("paste", preventClipboard);
+    return () => {
+      window.removeEventListener("copy", preventClipboard);
+      window.removeEventListener("cut", preventClipboard);
+      window.removeEventListener("paste", preventClipboard);
+    };
+  }, []);
 
   if (!s)
     return (
@@ -84,7 +79,8 @@ export default function PlayPage() {
     );
 
   const myGroup = s.groups.find((g) => g.id === me.groupId);
-  const badge = myGroup ? `${myGroup.label} · ${me.role ?? "—"}` : undefined;
+  const roleLabel = me.role === "ANSWERER" ? "Representative" : me.role === "VIEWER" ? "Member" : "—";
+  const badge = myGroup ? `${myGroup.label} · ${roleLabel}` : undefined;
 
   // ---- live question / reveal ----
   if (["QUESTION_LIVE", "REVEALED"].includes(s.phase) && s.question) {
@@ -101,14 +97,16 @@ export default function PlayPage() {
           paddingBottom: "max(1.25rem, env(safe-area-inset-bottom, 0px))",
         }}
       >
-        {/* no `sound` prop here: phones stay quiet, only the board plays timer sounds */}
+        <div className="flex justify-end">
+          <MechanicsButton />
+        </div>
         <QuestionScreen s={s} now={now} badge={badge} />
         {canAnswer && (
           <AnswerBox key={s.question.id} s={s} now={now} submitted={mine?.answer ?? null} onSent={reload} />
         )}
         {s.phase === "QUESTION_LIVE" && inPlay && me.role !== "ANSWERER" && (
           <p className="glass !p-4 text-center text-lg font-semibold text-navy">
-            {mine ? "Your Answerer has submitted." : "Your group's Answerer types the answer. Discuss in Meet."}
+            {mine ? "Your Representative has submitted." : "Your group's Representative submits the answer."}
           </p>
         )}
         {inClincher && !inPlay && (
@@ -121,7 +119,7 @@ export default function PlayPage() {
     );
   }
 
-  if (s.phase === "REGISTRATION" || s.phase === "GROUPING") {
+  if (s.phase === "REGISTRATION") {
     return (
       <Shell>
         <div className="glass my-auto text-center" style={{ animation: "up .5s ease backwards" }}>
@@ -130,9 +128,7 @@ export default function PlayPage() {
             Hi, {me.fullName}!
           </h1>
           <p className="mt-3 text-lg font-medium text-navy md:text-xl">
-            {s.phase === "REGISTRATION"
-              ? "You're registered. Waiting for the Quiz Master to close registration..."
-              : "Registration is closed. Waiting for the Quiz Master to assign groups..."}
+            You&apos;re registered. Waiting for the host to close registration...
           </p>
           <div className="mt-6 inline-flex animate-pulse items-center gap-2 rounded-full bg-ice px-5 py-2 font-display text-lg tracking-widest text-royal">
             <span className="inline-block h-2.5 w-2.5 rounded-full bg-danger" aria-hidden />
@@ -181,9 +177,6 @@ export default function PlayPage() {
     );
   }
 
-  const answerer = myGroup?.members.find((m) => m.role === "ANSWERER");
-  const taken = !!answerer && answerer.id !== me.id;
-
   return (
     <Shell>
       <header
@@ -206,70 +199,19 @@ export default function PlayPage() {
         </h1>
       </header>
 
-      {!me.role ? (
-        <section className="glass space-y-4">
-          <h2 className="font-display text-3xl uppercase tracking-wide text-navy-deep">Choose your role</h2>
-          <p className="text-base font-medium text-navy">
-            Each group has exactly one Answerer, the only person who types the group's answer. Everyone else is a
-            Viewer and answers by speaking in Google Meet.
-          </p>
-          <div className="grid gap-4 md:grid-cols-2">
-            <button
-              disabled={busy || taken}
-              onClick={() => chooseRole("ANSWERER")}
-              className="btn-gold !flex-col !gap-1 !py-6 !text-3xl"
-            >
-              Answerer
-              {taken && (
-                <span className="font-sans text-sm font-bold normal-case tracking-normal">
-                  Taken by {answerer?.name}
-                </span>
-              )}
-            </button>
-            <button
-              disabled={busy}
-              onClick={() => chooseRole("VIEWER")}
-              className="btn-primary !flex-col !gap-1 !py-6 !text-3xl"
-            >
-              Viewer
-              <span className="font-sans text-sm font-semibold normal-case tracking-normal text-white/90">
-                Answer by speaking in Meet
-              </span>
-            </button>
-          </div>
-          {error && (
-            <p role="alert" className="rounded-2xl border-2 border-red-300 bg-red-50 p-3 font-semibold text-red-800">
-              {error}
-            </p>
-          )}
-        </section>
-      ) : (
-        <section className="glass space-y-3 text-center">
-          <div className="animate-pulse font-display text-2xl uppercase tracking-wide text-navy-deep md:text-3xl">
-            Waiting for the Quiz Master to start the quiz...
-          </div>
-          <p className="text-lg font-medium text-navy">
-            You are the{" "}
-            <span className="rounded-full bg-gold-soft px-3 py-0.5 font-display tracking-widest text-navy-deep">
-              {me.role}
-            </span>{" "}
-            of {myGroup?.label}.
-          </p>
-          <p className="font-semibold text-mute">{s.groupsReady} of 6 groups ready</p>
-          <button
-            onClick={() => chooseRole(me.role === "ANSWERER" ? "VIEWER" : "ANSWERER")}
-            disabled={busy || (me.role === "VIEWER" && taken)}
-            className="min-h-11 px-4 text-base font-bold text-royal underline disabled:opacity-40"
-          >
-            Change role
-          </button>
-          {error && (
-            <p role="alert" className="font-semibold text-red-700">
-              {error}
-            </p>
-          )}
-        </section>
-      )}
+      <section className="glass space-y-3 text-center">
+        <div className="animate-pulse font-display text-2xl uppercase tracking-wide text-navy-deep md:text-3xl">
+          Waiting for the host to start the quiz...
+        </div>
+        <p className="text-lg font-medium text-navy">
+          You are the{" "}
+          <span className="rounded-full bg-gold-soft px-3 py-0.5 font-display tracking-widest text-navy-deep">
+            {me.role === "ANSWERER" ? "Representative" : "Member"}
+          </span>{" "}
+          of {myGroup?.label ?? "your selected group"}.
+        </p>
+        <p className="font-semibold text-mute">{s.groupsReady} of 6 Representatives ready</p>
+      </section>
 
       <section className="grid gap-4 md:grid-cols-3">
         {s.groups.map((g, i) => {
@@ -312,7 +254,7 @@ export default function PlayPage() {
                     </span>
                     {m.role === "ANSWERER" && (
                       <span className="shrink-0 rounded-full bg-gold-soft px-2 py-0.5 text-xs font-extrabold tracking-wider text-navy-deep">
-                        ANSWERER
+                        REPRESENTATIVE
                       </span>
                     )}
                   </li>
